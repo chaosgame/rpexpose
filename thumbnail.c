@@ -1,6 +1,6 @@
 #include "rpexpose.h"
 
-XImage *generate_thumbnail(Window window){
+XImage *thumbnail_generate(Window window){
 	unsigned int width, height, depth, border, offset, scale, x, y, thumb_width, thumb_height;
 	Window root;
 	XGetGeometry(g.x.display, window, &root, &x, &y, &width, &height, &border, &depth);
@@ -20,43 +20,62 @@ XImage *generate_thumbnail(Window window){
 		thumb_width=THUMB_WIDTH;
 	}
 
-	thumbnail_data=malloc(thumb_width*thumb_height*4);
+	XImage *thumbnail=XCreateImage(g.x.display, visual,
+								   depth, ZPixmap, THUMB_OFFSET,
+								   malloc(thumb_width*thumb_height*4),
+								   thumb_width, thumb_height,
+								   THUMB_PADDING, thumb_width*4);
 
 	int center=scale/2;
 	for(x=thumb_width-1; x; --x)
 		for(y=thumb_height-1; y; --y)
-			SET_PIXEL(thumbnail_data, x,y,
-					  XGetPixel(ximage, 
-								scale*x+center,
-								scale*y+center));
+			XPutPixel(thumbnail, x,y, XGetPixel(ximage, scale*x+center, scale*y+center));
 
 	XDestroyImage(ximage);
 	
-	return XCreateImage(g.x.display, 
-			    visual, 
-			    depth,
-	 		    ZPixmap,
-			    THUMB_OFFSET,
-			    thumbnail_data,
-			    thumb_width, thumb_height,
-			    THUMB_PADDING,
-			    thumb_width*4);
+	return thumbnail;
 }
 
-/*
-XImage *generate_thumbnail(Window window){
-	unsigned int width, height, depth, border, offset, scale, x, y, pixel;
-	Window root;
+typedef struct _header header_t;
+struct _header{
+	int depth;
+	int width;
+	int height;
+};
 
-	XGetGeometry(g.x.display, window, &root, &x, &y, &width, &height, &border, &depth);
-	Pixmap pixmap = XCreatePixmap(g.x.display, root, width, height, depth);
-	GC gc=XDefaultGC(g.x.display,0);
+int thumbnail_write(XImage *thumbnail, char *filename){
+	FILE *file=fopen(filename, "wb");
 
-
-	XCopyArea(g.x.display, window, pixmap, gc, 0,0, width, height, 0, 0);
-
-	// Code here
-
-	return NULL;
+	header_t h;
+	h.width=thumbnail->width;
+	h.height=thumbnail->height;
+	h.depth=thumbnail->depth;
+	
+	int size=h.width*h.height*4;
+	fwrite(&h,sizeof(header_t),1,file);
+	fwrite(thumbnail->data,sizeof(char),size,file);
+	
+	fclose(file);
 }
-*/
+
+XImage *thumbnail_read(char *filename){
+	FILE *file=fopen(filename, "rb");
+	header_t h;
+	fread(&h,sizeof(header_t),1,file);
+	
+	int size=h.width*h.height*4;
+	char *data=malloc(size);
+
+	fread(data,sizeof(char),size,file);
+
+	fclose(file);
+	
+	Visual *visual=XDefaultVisual(g.x.display,0);
+
+	return XCreateImage(g.x.display, visual,
+					    h.depth, ZPixmap,
+						THUMB_OFFSET, data,
+						h.width, h.height,
+						THUMB_PADDING, h.width*4);
+}
+

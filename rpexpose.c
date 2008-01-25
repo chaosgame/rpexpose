@@ -111,10 +111,11 @@ int rpexpose_generate(){
 
 	while(!feof(g.file.handle)){
 		fscanf(g.file.handle,"%i\n",&window);
-		XImage *thumbnail=generate_thumbnail(window);
+		XImage *thumbnail=thumbnail_generate(window);
 
-		sprintf(filename, "%s/.rpexpose/%i.xpm", g.file.home, window);
-		XpmWriteFileFromImage(g.x.display, filename, thumbnail, NULL, NULL);
+		sprintf(filename, "%s/.rpexpose/%i", g.file.home, window);
+		thumbnail_write(thumbnail,filename);
+		XFree(thumbnail);
 	}
 
 	XCloseDisplay(g.x.display);
@@ -127,7 +128,7 @@ int rpexpose_delete(){
 
 	while(!feof(g.file.handle)){
 		fscanf(g.file.handle,"%s\n",&window);
-		sprintf(filename,"%s/.rpexpose/%s.xpm",g.file.home,window);
+		sprintf(filename,"%s/.rpexpose/%s",g.file.home,window);
 		
 		int error = remove(filename);
 	}
@@ -198,18 +199,10 @@ int clean_up(){
 
 	for(i=0; i<g.gui.num_thumbs; ++i){
 		free(g.gui.thumbs[i].name);
-		XFreePixmap(g.x.display,g.gui.thumbs[i].pixmap);
+		XFree(g.gui.thumbs[i].image);
 	}
 
 	free(g.gui.thumbs);
-
-	hooklist_t *prev=NULL;
-	while(g.rc.exit){
-		free(g.rc.exit->command);
-		prev=g.rc.exit;
-		g.rc.exit=g.rc.exit->next;
-		free(g.rc.exit);
-	}
 
 	XFreePixmap(g.x.display,g.x.buffer);
 

@@ -33,20 +33,12 @@
 #define	THUMB_BPL			(4*THUMB_WIDTH)
 #define THUMB_SIZE			(THUMB_BPL*THUMB_HEIGHT)
 
-
-typedef struct _hooklist hooklist_t;
-
-struct _hooklist{
-	char *command;
-	hooklist_t *next;
-};
-
 typedef enum {UNKNOWN=0, CLEAR, GENERATE, SELECT, DELETE} action_t;
 
 typedef struct _thumbnail thumbnail_t;
 
 struct _thumbnail{
-	Pixmap pixmap;
+	XImage *image;
 
 	int selected;
 	
@@ -97,8 +89,6 @@ struct _global{
 
 		int border_width;
 
-		hooklist_t *exit;
-	
 		char *keybindings[256];
 	} rc;
 };
@@ -117,10 +107,6 @@ int parse_command(char *command);
 int parse_set(char *command);
 
 int parse_bind(char *command, int unbind);
-
-int parse_addhook(char *command);
-
-int addhook(hooklist_t **list, char *command);
 
 int split_command(char *command, char **arguments);
 
@@ -149,9 +135,11 @@ int event_move(int new);
 int event_select();
 
 /* thumbnail.c */
-#define SET_PIXEL(data, x, y, pixel) (*(unsigned int*)((data)+4*((y)*thumb_width+(x)))=(pixel))
+XImage *thumbnail_generate(Window window);
 
-XImage *generate_thumbnail(Window window);
+int thumbnail_write(XImage *thumbnail, char *filename);
+
+XImage *thumbnail_read(char *filename);
 
 #endif
 

@@ -53,7 +53,6 @@ int load_rcdefaults(){
 	g.rc.select_exec=strdup("ratpoison -c \"select %i\"");
 
 	g.rc.border_width=2;
-	g.rc.exit=NULL;
 	g.rc.widescreen=0;
 }
 
@@ -95,8 +94,6 @@ int parse_command(char *command){
 		return parse_bind(arguments,0);
 	else if( !strcmp(command,"unbind") )
 		return parse_bind(arguments,1);
-	else if( !strcmp(command,"addhook") )
-		return parse_addhook(arguments);
 	else if( !strcmp(command,"exec") )
 		return parse_exec(arguments);
 	else{
@@ -136,34 +133,6 @@ int parse_set(char *command){
 
 int parse_exec(char *command){
 	return system(command);
-}
-
-int parse_addhook(char *command){
-	char *arguments;
-
-	split_command(command,&arguments);
-
-	if(!arguments){
-		perror("addhook called with no arguments in rc file");
-		return 1;
-	}
-
-	if( !strcmp(command,"exit") )
-		return addhook(&(g.rc.exit),arguments);
-	else{
-		perror("Unknown hook set in rc file");
-		return 1;
-	}
-}
-
-int addhook(hooklist_t **list, char *command){
-	while( *list ) list=&((*list)->next);
-
-	*list = malloc(sizeof(hooklist_t));
-	(*list)->next=NULL;
-	(*list)->command=strdup(command);
-
-	return 0;
 }
 
 int parse_bind(char *command, int unbind){

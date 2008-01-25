@@ -52,9 +52,11 @@ int load_input(){
 	for(j=0, i=head; i; i=i->next, ++j){
 		free(prev);
 
-		// Read in the XPM file
-		sprintf(buffer,"%s/.rpexpose/%i.xpm",g.file.home,i->xid);
-		XpmReadFileToPixmap(g.x.display,g.x.window,buffer,&g.gui.thumbs[j].pixmap,NULL,NULL);
+		// Read in the file
+		sprintf(buffer,"%s/.rpexpose/%i",g.file.home,i->xid);
+		g.gui.thumbs[j].image=thumbnail_read(buffer);
+		g.gui.thumbs[j].width=g.gui.thumbs[j].image->width;
+		g.gui.thumbs[j].height=g.gui.thumbs[j].image->height;
 
 		if(i->selected && g.gui.selected==-1)
 			g.gui.selected=j;
@@ -121,9 +123,7 @@ int load_pixmap(){
 	for(y=0; y<g.gui.height-1; ++y){
 		for(x=0; x<g.gui.width; ++x){
 			int i=g.gui.width*y+x;
-			unsigned int width, height, depth, border, x_pos, y_pos;
-			Window root;
-			XGetGeometry(g.x.display, g.gui.thumbs[i].pixmap, &root, &x_pos, &y_pos, &width, &height, &border, &depth);
+			unsigned int x_pos, y_pos, width=g.gui.thumbs[i].width, height=g.gui.thumbs[i].height;
 			
 			x_pos=g.rc.border_width+x*(g.rc.border_width+THUMB_WIDTH)+(THUMB_WIDTH-width)/2;
 			y_pos=g.rc.border_width+y*(g.rc.border_width+THUMB_HEIGHT)+(THUMB_HEIGHT-height)/2;
@@ -137,13 +137,13 @@ int load_pixmap(){
 			g.gui.thumbs[i].height=height;
 
 			// Draw it already, damn it!
-			XCopyArea(g.x.display,
-					  g.gui.thumbs[i].pixmap,
+			XPutImage(g.x.display,
 					  g.x.buffer,
 					  g.x.gc,
+					  g.gui.thumbs[i].image,
 					  0,0,
-					  width,height,
-					  x_pos, y_pos);
+					  x_pos, y_pos,
+					  width,height);
 
 			XDrawRectangle(g.x.display,
 						   g.x.buffer,
@@ -159,9 +159,7 @@ int load_pixmap(){
 	
 	for(x=0; x<left_over; ++x){
 		int i=g.gui.width*y+x;
-		unsigned int width, height, depth, border, x_pos, y_pos;
-		Window root;
-		XGetGeometry(g.x.display, g.gui.thumbs[g.gui.width*y+x].pixmap, &root, &x_pos, &y_pos, &width, &height, &border, &depth);
+		unsigned int x_pos, y_pos, width=g.gui.thumbs[i].width, height=g.gui.thumbs[i].height;
 		
 		x_pos=g.rc.border_width+x*(g.rc.border_width+THUMB_WIDTH)+(THUMB_WIDTH-width)/2+offset;
 		y_pos=g.rc.border_width+y*(g.rc.border_width+THUMB_HEIGHT)+(THUMB_HEIGHT-height)/2;
@@ -175,13 +173,13 @@ int load_pixmap(){
 		g.gui.thumbs[i].height=height;
 
 		// Draw it already, damn it!
-		XCopyArea(g.x.display,
-				  g.gui.thumbs[i].pixmap,
+		XPutImage(g.x.display,
 				  g.x.buffer,
 				  g.x.gc,
+				  g.gui.thumbs[i].image,
 				  0,0,
-				  width,height,
-				  x_pos, y_pos);
+				  x_pos, y_pos,
+				  width,height);
 
 		XDrawRectangle(g.x.display,
 					   g.x.buffer,

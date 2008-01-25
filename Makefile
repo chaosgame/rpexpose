@@ -1,25 +1,18 @@
-INCLUDE=`pkg-config --cflags x11 xpm` 
-LIBS=`pkg-config --libs x11 xpm` -lm
+INCLUDE=`pkg-config --cflags x11`
+LIBS=`pkg-config --libs x11` -lm
+OBJECTS=rpexpose.o parse.o thumbnail.o gui.o
+BINARY=rpexpose
 
-all: rpexpose
+all: ${BINARY}
 
-rpexpose: rpexpose.o parse.o thumbnail.o gui.o
-	gcc -g rpexpose.o parse.o thumbnail.o gui.o -o rpexpose  $(LIBS)
+${BINARY}: ${OBJECTS}
+	${CC} ${CFLAGS} ${OBJECTS} ${LIBS} -g -o $@ 
 
-rpexpose.o: rpexpose.c rpexpose.h
-	gcc -g $(INCLUDE) -c rpexpose.c 
+.c.o:
+	${CC} ${CFLAGS} ${INCLUDE} -g -c $^
 
-parse.o: parse.c rpexpose.h
-	gcc -g $(INCLUDE) -c parse.c 
-
-thumbnail.o: thumbnail.c rpexpose.h
-	gcc -g $(INCLUDE) -c thumbnail.c
-
-gui.o: gui.c rpexpose.h
-	gcc -g $(INCLUDE) -c gui.c 
-
-install: rpexpose
-	cp rpexpose /usr/local/bin
+install: ${BINARY}
+	cp ${BINARY} /usr/local/bin
 
 clean:
-	rm -f *.o rpexpose
+	rm -f ${OBJECTS} ${BINARY}
