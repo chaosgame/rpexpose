@@ -5,7 +5,7 @@
 # Make the window arrangement favor wider layouts
 set widescreen true
 
-# Set the border between thumbnails to be 6pixels
+# Set the border between thumbnails to be 8 pixels
 set border_width 8
 
 # Set VI keybindings, with arrow keys

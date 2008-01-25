@@ -128,7 +128,9 @@ int load_input();
 
 int load_pixmap();
 
-int event_redraw();
+int event_draw();
+
+int event_redraw(int x, int y, int width, int height);
 
 int event_move(int new);
 

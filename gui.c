@@ -107,7 +107,7 @@ int load_xwindow(){
 	XSetForeground(g.x.display,g.x.rgc,XWhitePixel(g.x.display,0));
 	XSetBackground(g.x.display,g.x.rgc,XBlackPixel(g.x.display,0));
 
-	XSelectInput(g.x.display,g.x.window, StructureNotifyMask | KeyPressMask);
+	XSelectInput(g.x.display,g.x.window, StructureNotifyMask | KeyPressMask | ExposureMask);
 
 	XSetTransientForHint(g.x.display, g.x.window, XDefaultRootWindow(g.x.display));
 
@@ -190,7 +190,7 @@ int load_pixmap(){
 	return 0;
 }
 
-int event_redraw(){
+int event_draw(){
 	XCopyArea(g.x.display,
 			  g.x.buffer,
 			  g.x.window,
@@ -198,6 +198,18 @@ int event_redraw(){
 			  0,0,
 			  g.x.width,g.x.height,
 			  0,0);
+	
+	return 0;
+}
+
+int event_redraw(int x, int y, int width, int height){
+	XCopyArea(g.x.display,
+			  g.x.buffer,
+			  g.x.window,
+			  g.x.gc,
+			  x,y,
+			  width,height,
+			  x,y);
 	
 	return 0;
 }

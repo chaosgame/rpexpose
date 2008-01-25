@@ -153,7 +153,7 @@ int rpexpose_select(){
 		XNextEvent(g.x.display, &e);
 		switch(e.type){
 		case MapNotify:
-			event_redraw();
+			event_draw();
 			event_move(g.gui.selected);
 			break;
 		case KeyPress:{
@@ -182,6 +182,8 @@ int rpexpose_select(){
 				parse_command(command);
 		break;
 		}
+		case Expose:
+			event_redraw(e.xexpose.x,e.xexpose.y,e.xexpose.width,e.xexpose.height);
 		}
 	}
 

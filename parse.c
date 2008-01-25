@@ -52,7 +52,7 @@ int load_rcdefaults(){
 
 	g.rc.select_exec=strdup("ratpoison -c \"select %i\"");
 
-	g.rc.border_width=2;
+	g.rc.border_width=8;
 	g.rc.widescreen=0;
 }
 
