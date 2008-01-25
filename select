@@ -1,0 +1,5 @@
+#! /bin/bash
+sleep .1
+ratpoison -c "windows %s:%i:%n:%t" |
+sed -e "s/^*:/1:/" -e "s/^[+-]:/0:/" |
+rpexpose --select -

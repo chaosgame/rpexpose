@@ -1,0 +1,28 @@
+# Example RpExpose Resource File
+#
+# (c) Nathan Lawrence 2008
+
+# Make the window arrangement favor wider layouts
+set widescreen true
+
+# Set the border between thumbnails to be 6pixels
+set border_width 8
+
+# Set VI keybindings, with arrow keys
+bind h left
+bind j down
+bind k up
+bind l right
+bind q quit
+bind Right right
+bind Left left
+bind Up up
+bind Down down
+bind space select
+bind Return select
+
+# Be annoying
+bind m exec ratpoison -c "echo You pressed the M key!"
+
+# Run a sample command on startup
+#exec ratpoison -c "echo This is an example message from the rc file"

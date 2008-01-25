@@ -1,0 +1,6 @@
+#! /bin/bash
+sleep .1
+ratpoison -c "fdump" |
+sed -e "s/[,:]/\n/g" -e "s/[()]//g" -e "s/ /\t/g" | 
+awk '/window/ {print $2}' |
+rpexpose --generate -
