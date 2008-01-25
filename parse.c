@@ -65,7 +65,7 @@ int load_rcfile(){
 	FILE *file=fopen(buffer,"r");
 
 	if(!file){
-		strcpy("/etc/rpexposerc",buffer);
+		strcpy(buffer,"/etc/rpexposerc");
 		file=fopen(buffer,"r");
 		if(!file)
 			return 0;

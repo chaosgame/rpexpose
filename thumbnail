@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 sleep .1
 ratpoison -c "fdump" |
 sed -e "s/[,:]/\n/g" -e "s/[()]//g" -e "s/ /\t/g" | 
