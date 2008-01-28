@@ -170,7 +170,7 @@ int rpexpose_select(){
 		XNextEvent(g.x.display, &e);
 		switch(e.type){
 		case MapNotify:
-			XGrabKeyboard(g.x.display,g.x.window,False,GrabModeSync,GrabModeSync,CurrentTime);
+			XGrabKeyboard(g.x.display,g.x.window,False,GrabModeSync,GrabModeAsync,CurrentTime);
 		case KeyPress:{
 			char *i, *command=g.rc.keybindings[e.xkey.keycode];
 
