@@ -16,6 +16,13 @@ static struct argp_option cmdline_options[] = {
 	{0}
 };
 
+int open_file(char *filename){
+	if( strcmp((g.file.name=filename),"-") )
+		g.file.handle=fopen(g.file.name,"r");
+	else
+		g.file.handle=stdin;
+}
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state){
 	switch(key){
 	case 'c':
@@ -23,18 +30,22 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state){
 		break;
 	case 'g':
 		g.action=GENERATE;
-		g.file.name=arg;
+		open_file(arg);
 		break;
 	case 'd':
 		g.action=DELETE;
-		g.file.name=arg;
+		open_file(arg);
 		break;
 	case 's':
 		g.action=SELECT;
-		g.file.name=arg;
+		open_file(arg);
 		break;
 	case ARGP_KEY_END:
-		if( g.action ) break;
+		if( !g.action ){
+			argp_usage(state);
+			exit(1);
+		}
+		break;
 	default:
 		return ARGP_ERR_UNKNOWN;
 	}
@@ -48,36 +59,25 @@ int main(int argc, char **argv){
 	g.file.name = NULL;
 	g.file.home = getenv("HOME");
 
-	argp_parse(&argp, argc, argv, 0, 0, NULL); 
+	argp_parse(&argp, argc, argv, 0, 0, NULL);
 	
-	if( g.file.name == NULL )
-		g.file.handle = NULL;
-	else if( strcmp(g.file.name,"-") )
-		g.file.handle=fopen(g.file.name,"r");
-	else
-		g.file.handle=stdin;
-
 	int error=1;
 	switch(g.action){
 	case CLEAR:
-		error=rpexpose_clean();
-		break;
+		return rpexpose_clean();
 	case GENERATE:
 		error=rpexpose_generate();
-		break;
+		fclose(g.file.handle);
+		return error;
 	case DELETE:
 		error=rpexpose_delete();
-		break;
+		fclose(g.file.handle);
+		return error;
 	case SELECT:
 		error=rpexpose_select();
-		break;
-	}
-
-	if( g.file.handle )
 		fclose(g.file.handle);
-
-
-	return error;
+		return error;
+	}
 }
 
 int rpexpose_clean(){
@@ -91,7 +91,10 @@ int rpexpose_clean(){
 	if(directory){
 		while( ep = readdir(directory) ){
 			sprintf(filename,"%s/.rpexpose/%s",g.file.home,ep->d_name);
-			remove(filename);
+			if( remove(filename) ){
+				perror("Could not delete file");
+				return 1;
+			}
 		}
 		closedir(directory);
 	}
@@ -99,6 +102,7 @@ int rpexpose_clean(){
 		perror("Couldn't open $HOME/.rpexpose/\n");
 		return 1;
 	}
+	
 	return 0;
 }
 
@@ -108,6 +112,15 @@ int rpexpose_generate(){
 	Window window;
 	
 	char filename[BUFFER_SIZE];
+
+	sprintf(filename,"%s/.rpexpose/",g.file.home);
+
+	DIR *directory = opendir(filename);
+	if(!directory)
+		if( mkdir(filename,0755) ){
+			perror("Could not create directory");
+			exit(1);
+		}
 
 	while(!feof(g.file.handle)){
 		fscanf(g.file.handle,"%i\n",&window);
@@ -130,7 +143,11 @@ int rpexpose_delete(){
 		fscanf(g.file.handle,"%s\n",&window);
 		sprintf(filename,"%s/.rpexpose/%s",g.file.home,window);
 		
-		int error = remove(filename);
+		if( remove(filename) ){
+			perror("Could not delete file");
+			return 1;
+		}
+
 	}
 	return 0;
 }
@@ -143,19 +160,17 @@ int rpexpose_select(){
 	load_input();
 	load_pixmap();
 
-
 	// And here is when the magic is supposed to happen...
 	
 	XMapWindow(g.x.display,g.x.window);
+
 
 	XEvent e;
 	for(;;){
 		XNextEvent(g.x.display, &e);
 		switch(e.type){
 		case MapNotify:
-			event_draw();
-			event_move(g.gui.selected);
-			break;
+			XGrabKeyboard(g.x.display,g.x.window,False,GrabModeSync,GrabModeSync,CurrentTime);
 		case KeyPress:{
 			char *i, *command=g.rc.keybindings[e.xkey.keycode];
 
@@ -184,13 +199,15 @@ int rpexpose_select(){
 		}
 		case Expose:
 			event_redraw(e.xexpose.x,e.xexpose.y,e.xexpose.width,e.xexpose.height);
+			event_move(g.gui.selected);
 		}
 	}
 
 Quit:
 
-	// Mop, Mop
+	// Mop mop
 	clean_up();
+	XUngrabKeyboard(g.x.display,CurrentTime);
 	XCloseDisplay(g.x.display);
 }
 
@@ -201,6 +218,7 @@ int clean_up(){
 
 	for(i=0; i<g.gui.num_thumbs; ++i){
 		free(g.gui.thumbs[i].name);
+		free(g.gui.thumbs[i].id);
 		XFree(g.gui.thumbs[i].image);
 	}
 

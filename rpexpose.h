@@ -42,13 +42,13 @@ struct _thumbnail{
 
 	int selected;
 	
-	int number, width, height, x, y;
+	int width, height, x, y;
 
 	int left, right;
 
 	Window xid;
 	
-	char *name;
+	char *name, *id;
 
 	thumbnail_t *next;
 };
