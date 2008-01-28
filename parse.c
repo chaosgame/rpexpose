@@ -4,38 +4,30 @@
 
 #include "rpexpose.h"
 
-int split_command(char *command, char **arguments){
+char *parse_split(char *command){
 	// Read until a space is found
-	char *i=command;
-	while( (*i)?(!isspace(*i)):(0) ) ++i;
-
+	char *arguments=command;
+	while( (*arguments)?(!isspace(*arguments)):(0) ) ++arguments;
 
 	// Isolate the command
-	*i='\0';
+	*arguments='\0';
 
 	// If the command has length 0
-	if(i==command){
-		*arguments=NULL;
-		return 1;
-	}
-	++i;
+	if(arguments==command)
+		return NULL;
+	++arguments;
 
 	// If the end of the string has been reached
-	if( !*i ){
-		*arguments=NULL;
-		return 0;
-	}
+	if( !*arguments )
+		return NULL;
 
 	// Read until a non whitespace character is found
-	while((*i)?(isspace(*i)):(0)) ++i;
+	while((*arguments)?(isspace(*arguments)):(0)) ++arguments;
 
-	if( !*i ){
-		*arguments=NULL;
-		return 0;
-	}
+	if( !*arguments )
+		return NULL;
 
-	*arguments=i;
-	return 0;
+	return arguments;
 }
 
 int load_rcdefaults(){
@@ -50,15 +42,18 @@ int load_rcdefaults(){
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Return)]=strdup("select");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Escape)]=strdup("quit");
 
+	g.rc.colon_exec=strdup("ratpoison -c \"select %s\"");
 	g.rc.select_exec=strdup("ratpoison -c \"select %i\"");
 
-	g.rc.border_width=8;
+	g.rc.text_padding=2;
+	g.rc.border_padding=4;
+	g.rc.thumb_padding=8;
 	g.rc.widescreen=0;
 }
 
 int load_rcfile(){
 	char buffer[BUFFER_SIZE];
-	int error;
+	int error=0;
 
 
 	sprintf(buffer,"%s/.rpexposerc",g.file.home);
@@ -74,38 +69,60 @@ int load_rcfile(){
 	while(!feof(file)){
 		*buffer='\0';
 		fgets(buffer,BUFFER_SIZE,file);
-		if( error = parse_command(buffer) ){
-			return error;
-		}
+		error+=parse_command(buffer);
 	}
 	return 0;
 }
 
 int parse_command(char *command){
+	if(!command) return 0;
 	if(*command=='#') return 0;
 
-	char *arguments;
+	char *arguments=parse_split(command);
 
-	if(split_command(command,&arguments)) return 0;
+	if(*command=='\0') return 0;
 	
-	if( !strcmp(command,"set") )
-		return parse_set(arguments);
-	else if( !strcmp(command,"bind") )
-		return parse_bind(arguments,0);
-	else if( !strcmp(command,"unbind") )
-		return parse_bind(arguments,1);
-	else if( !strcmp(command,"exec") )
-		return parse_exec(arguments);
-	else{
-		fprintf(stderr,"Command not recognized");
-		return 1;
+	switch(g.status){
+	case S_COLON:
+		if( !strcmp(command,"escape") )
+			return colon_exit(2);
+		if( !strcmp(command,"select") )
+			return colon_select();
+	case S_SELECT:
+		if( !strcmp(command,"colon") )
+			return colon_init(2);
+		if( !strcmp(command,"escape") )
+			exit(0);
+		if( !strcmp(command,"quit") )
+			exit(0);
+		if( !strcmp(command,"left") )
+			return event_move(g.gui.thumbs[g.gui.selected].left);
+		if( !strcmp(command,"right") )
+			return event_move(g.gui.thumbs[g.gui.selected].right);
+		if( !strcmp(command,"up") )
+			return event_move(g.gui.thumbs[g.gui.selected].left);
+		if( !strcmp(command,"down") )
+			return event_move(g.gui.thumbs[g.gui.selected].right);
+		if( !strcmp(command,"select") )
+			return event_select();
+	case S_STARTUP:
+		if( !strcmp(command,"set") )
+			return parse_set(arguments);
+		if( !strcmp(command,"bind") )
+			return parse_bind(arguments,0);
+		if( !strcmp(command,"unbind") )
+			return parse_bind(arguments,1);
+		if( !strcmp(command,"exec") )
+			return system(command);
+	case S_SHUTDOWN:
+	default:
+			fprintf(stderr,"Bad Command\n");
+			return 1;
 	}
 }
 
 int parse_set(char *command){
-	char *arguments;
-
-	split_command(command,&arguments);
+	char *arguments=parse_split(command);
 
 	if(!arguments){
 		perror("set called with no arguments in rc file");
@@ -119,27 +136,32 @@ int parse_set(char *command){
 		
 		g.rc.widescreen=value;
 		return 0;
-	}else if( !strcmp(command,"border_width") ){
-		g.rc.border_width=atoi(arguments);
+	}
+	if( !strcmp(command,"thumb_padding") ){
+		g.rc.thumb_padding=atoi(arguments);
 		return 0;
-	}else if( !strcmp(command,"select_exec") ){
+	}
+	if( !strcmp(command,"text_padding") ){
+		g.rc.text_padding=atoi(arguments);
+		return 0;
+	}
+	if( !strcmp(command,"border_padding") ){
+		g.rc.border_padding=atoi(arguments);
+		return 0;
+	}
+	if( !strcmp(command,"select_exec") ){
 		free(g.rc.select_exec);
 		g.rc.select_exec=strdup(arguments);
-	}else{
-		perror("Unknown variable set in rc file");
-		return 1;
+		return 0;
 	}
-}
 
-int parse_exec(char *command){
-	return system(command);
+	fprintf(stderr,"Unknown variable\n");
+	return 1;
 }
 
 int parse_bind(char *command, int unbind){
-	char *arguments;
-
-	split_command(command,&arguments);
-
+	char *arguments=parse_split(command);
+	
 	if(!arguments){
 		perror("bind called with no options in rc file");
 		return 1;
@@ -155,28 +177,24 @@ int parse_bind(char *command, int unbind){
 }
 
 int parse_truth(char *arguments){
-	char *trash;
-	split_command(arguments,&trash);
+	if(parse_split(arguments)){
+		perror("Unknown boolean value in rc file");
+		return -1;
+	}
+	if( !strcmp(arguments,"true") )
+		return 1;
+	if( !strcmp(arguments,"t") )
+		return 1;
+	if( !strcmp(arguments,"1") )
+		return 1;
+	if( !strcmp(arguments,"false") )
+		return 0;
+	if( !strcmp(arguments,"f") )
+		return 0;
+	if( !strcmp(arguments,"0") )
+		return 0;
 	
-	if(trash){
-		perror("Unknown boolean value in rc file");
-		return -1;
-	}
-	else if( !strcmp(arguments,"true") )
-		return 1;
-	else if( !strcmp(arguments,"t") )
-		return 1;
-	else if( !strcmp(arguments,"1") )
-		return 1;
-	else if( !strcmp(arguments,"false") )
-		return 0;
-	else if( !strcmp(arguments,"f") )
-		return 0;
-	else if( !strcmp(arguments,"0") )
-		return 0;
-	else{
-		perror("Unknown boolean value in rc file");
-		return -1;
-	}
+	perror("Unknown boolean value in rc file");
+	return -1;
 }
 

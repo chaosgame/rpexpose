@@ -11,7 +11,6 @@ static char args_doc[] = "";
 static struct argp_option cmdline_options[] = {
 	{"clean",		'c', NULL,		0, "Cleans the /var/run/rpexpose directory" },
 	{"generate",	'g', "FILE",	0, "Generates ximage dumps from a list of top level windows"},
-	{"delete",		'd', "FILE",	0, "Deletes all ximage dumps in a list of top level windows"},
 	{"select",		's', "FILE",	0, "Creates a selection dialog for a list of managed windows"},
 	{0}
 };
@@ -26,18 +25,14 @@ int open_file(char *filename){
 static error_t parse_opt(int key, char *arg, struct argp_state *state){
 	switch(key){
 	case 'c':
-		g.action=CLEAR;
+		g.action=A_CLEAR;
 		break;
 	case 'g':
-		g.action=GENERATE;
-		open_file(arg);
-		break;
-	case 'd':
-		g.action=DELETE;
+		g.action=A_GENERATE;
 		open_file(arg);
 		break;
 	case 's':
-		g.action=SELECT;
+		g.action=A_SELECT;
 		open_file(arg);
 		break;
 	case ARGP_KEY_END:
@@ -55,7 +50,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state){
 static struct argp argp = { cmdline_options, parse_opt, args_doc, doc };
 
 int main(int argc, char **argv){
-	g.action = UNKNOWN;
+	g.action = A_UNKNOWN;
 	g.file.name = NULL;
 	g.file.home = getenv("HOME");
 
@@ -63,17 +58,13 @@ int main(int argc, char **argv){
 	
 	int error=1;
 	switch(g.action){
-	case CLEAR:
+	case A_CLEAR:
 		return rpexpose_clean();
-	case GENERATE:
+	case A_GENERATE:
 		error=rpexpose_generate();
 		fclose(g.file.handle);
 		return error;
-	case DELETE:
-		error=rpexpose_delete();
-		fclose(g.file.handle);
-		return error;
-	case SELECT:
+	case A_SELECT:
 		error=rpexpose_select();
 		fclose(g.file.handle);
 		return error;
@@ -135,35 +126,22 @@ int rpexpose_generate(){
 	return 0;
 }
 
-int rpexpose_delete(){
-	char window[SMALL_BUFFER_SIZE];
-	char filename[BUFFER_SIZE];
-
-	while(!feof(g.file.handle)){
-		fscanf(g.file.handle,"%s\n",&window);
-		sprintf(filename,"%s/.rpexpose/%s",g.file.home,window);
-		
-		if( remove(filename) ){
-			perror("Could not delete file");
-			return 1;
-		}
-
-	}
-	return 0;
-}
-
 int rpexpose_select(){
+	g.status=S_STARTUP;
 	g.x.display = XOpenDisplay(getenv("DISPLAY"));
 
 	load_rcdefaults();
 	load_rcfile();
 	load_input();
-	load_pixmap();
+	load_buffer();
+
+	atexit(clean_up);
 
 	// And here is when the magic is supposed to happen...
 	
 	XMapWindow(g.x.display,g.x.window);
 
+	g.status=S_SELECT;
 
 	XEvent e;
 	for(;;){
@@ -171,48 +149,52 @@ int rpexpose_select(){
 		switch(e.type){
 		case MapNotify:
 			XGrabKeyboard(g.x.display,g.x.window,False,GrabModeSync,GrabModeAsync,CurrentTime);
-		case KeyPress:{
-			char *i, *command=g.rc.keybindings[e.xkey.keycode];
-
-			if(!command) break;
-
-			// Chomp chomp
-			for(i=command; (*i)?(*i!='\n'):(0) ; ++i);
-			*i='\0';
-
-			if( !strcmp(command,"quit") )
-				goto Quit;
-			else if( !strcmp(command,"left") )
-					event_move(g.gui.thumbs[g.gui.selected].left);
-			else if( !strcmp(command,"right") )
-					event_move(g.gui.thumbs[g.gui.selected].right);
-			else if( !strcmp(command,"up") )
-					event_move(g.gui.thumbs[g.gui.selected].left);
-			else if( !strcmp(command,"down") )
-					event_move(g.gui.thumbs[g.gui.selected].right);
-			else if( !strcmp(command,"select") ){
-				event_select();
-				goto Quit;
-			}else
-				parse_command(command);
-		break;
-		}
+			break;
+		case KeyPress:
+			switch(g.status){
+			case S_COLON:
+				if(g.colon.length<BUFFER_SIZE){
+					KeySym keysym=XKeycodeToKeysym(g.x.display,e.xkey.keycode,0);
+					if( keysym<=255 && isascii(keysym) ){
+						colon_refresh(keysym);
+						colon_redraw();
+					}
+					else{
+						parse_command(g.rc.keybindings[e.xkey.keycode]);
+					}
+				}
+				break;
+			case S_SELECT:
+			default:{
+				char *command=g.rc.keybindings[e.xkey.keycode];
+				if( command )
+					parse_command(command);
+				else{
+					KeySym keysym=XKeycodeToKeysym(g.x.display,e.xkey.keycode,0);
+					if(keysym<=255 && isascii(keysym)){
+						colon_init();
+						colon_refresh(keysym);
+						colon_redraw();
+					}
+				}
+			}
+			}
 		case Expose:
-			event_redraw(e.xexpose.x,e.xexpose.y,e.xexpose.width,e.xexpose.height);
-			event_move(g.gui.selected);
+			switch(g.status){
+			case S_COLON:
+				colon_redraw();
+			case S_SELECT:
+				event_redraw(e.xexpose.x,e.xexpose.y,e.xexpose.width,e.xexpose.height);
+				event_move(g.gui.selected);
+			}
 		}
 	}
-
-Quit:
-
-	// Mop mop
-	clean_up();
-	XUngrabKeyboard(g.x.display,CurrentTime);
-	XCloseDisplay(g.x.display);
+	return 0;
 }
 
 
-int clean_up(){
+void clean_up(){
+	g.status=S_SHUTDOWN;
 	int i;
 	for(i=0; i<256; ++i) free(g.rc.keybindings[i]);
 
@@ -226,6 +208,8 @@ int clean_up(){
 
 	XFreePixmap(g.x.display,g.x.buffer);
 
-	return 0;
+	XUngrabKeyboard(g.x.display,CurrentTime);
+	XCloseDisplay(g.x.display);
+	return;
 }
 

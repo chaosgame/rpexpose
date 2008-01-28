@@ -1,6 +1,6 @@
 INCLUDE=`pkg-config --cflags x11`
 LIBS=`pkg-config --libs x11` -lm
-OBJECTS=rpexpose.o parse.o thumbnail.o gui.o
+OBJECTS=rpexpose.o parse.o thumbnail.o gui.o colon.o
 BINARY=rpexpose
 
 all: ${BINARY}

@@ -15,7 +15,8 @@ int load_input(){
 		if( feof(g.file.handle) ) break;
 
 		char *id, *p=buffer;
-				// Does the list exist? create it!
+	
+		// Does the list exist? create it!
 		if(i){
 			i->next=malloc(sizeof(thumbnail_t));
 			i=i->next;
@@ -51,15 +52,21 @@ int load_input(){
 	thumbnail_t *prev=NULL;
 	for(j=0, i=head; i; i=i->next, ++j){
 		free(prev);
+		sprintf(buffer,"%s/.rpexpose/%i",g.file.home,i->xid);
 
 		// Read in the file
-		sprintf(buffer,"%s/.rpexpose/%i",g.file.home,i->xid);
-		g.gui.thumbs[j].image=thumbnail_read(buffer);
-		g.gui.thumbs[j].width=g.gui.thumbs[j].image->width;
-		g.gui.thumbs[j].height=g.gui.thumbs[j].image->height;
-
-		if(i->selected && g.gui.selected==-1)
+		if(i->selected && g.gui.selected==-1){
+			XImage *ximage=thumbnail_generate(i->xid);
+			g.gui.thumbs[j].image=ximage;
+			g.gui.thumbs[j].width=ximage->width;
+			g.gui.thumbs[j].height=ximage->height;
+			thumbnail_write(ximage,buffer);
 			g.gui.selected=j;
+		}else{
+			g.gui.thumbs[j].image=thumbnail_read(buffer);
+			g.gui.thumbs[j].width=g.gui.thumbs[j].image->width;
+			g.gui.thumbs[j].height=g.gui.thumbs[j].image->height;
+		}
 
 		// Get the X geometry
 		g.gui.thumbs[j].xid=i->xid;
@@ -86,8 +93,8 @@ int load_xwindow(){
 	}
 	g.gui.height -= (g.gui.width*g.gui.height - g.gui.num_thumbs)/g.gui.width;
 	
-	g.x.width=g.rc.border_width+g.gui.width*(g.rc.border_width+THUMB_WIDTH);
-	g.x.height=g.rc.border_width+g.gui.height*(g.rc.border_width+THUMB_HEIGHT);
+	g.x.width=g.rc.thumb_padding+g.gui.width*(g.rc.thumb_padding+THUMB_WIDTH);
+	g.x.height=g.rc.thumb_padding+g.gui.height*(g.rc.thumb_padding+THUMB_HEIGHT);
 
 
 	// Create X Data structures
@@ -95,7 +102,7 @@ int load_xwindow(){
 									XDefaultRootWindow(g.x.display),
 									0,0,
 									g.x.width,g.x.height,
-									g.rc.border_width,
+									g.rc.border_padding,
 									XBlackPixel(g.x.display,0),
 									XWhitePixel(g.x.display,0));
 
@@ -120,17 +127,17 @@ int load_xwindow(){
 	return 0;
 }
 
-inline int draw_text(Drawable d, char *text, int x, int y, int padding){
+inline int draw_text(Drawable d, char *text, int x, int y){
 	int len=strlen(text);
 	XFontStruct *font=XQueryFont(g.x.display,XGContextFromGC(g.x.gc));
 	
-	int height=font->max_bounds.ascent+2*padding;
+	int height=font->max_bounds.ascent+2*g.rc.text_padding;
 
-	int width=XTextWidth(font,text,len)+2*padding;
+	int width=XTextWidth(font,text,len)+2*g.rc.text_padding;
 
 	XFillRectangle(g.x.display, g.x.buffer, g.x.rgc, x, y, width, height);
 
-	XDrawString(g.x.display, g.x.buffer, g.x.gc, x+padding, y+height-padding, text, len);
+	XDrawString(g.x.display, g.x.buffer, g.x.gc, x+g.rc.text_padding, y+height-g.rc.text_padding, text, len);
 	
 	XDrawRectangle(g.x.display, g.x.buffer, g.x.gc, x, y, width, height);
 	
@@ -143,7 +150,7 @@ inline int draw_thumbnail(Drawable d, thumbnail_t *t){
 
 }
 
-int load_pixmap(){
+int load_buffer(){
 	int x, y, i;
 	for(y=0; y<g.gui.height-1; ++y){
 		for(x=0; x<g.gui.width; ++x){
@@ -153,21 +160,21 @@ int load_pixmap(){
 			t->width=g.gui.thumbs[i].width;
 			t->height=g.gui.thumbs[i].height;
 
-			t->x=g.rc.border_width+x*(g.rc.border_width+THUMB_WIDTH)+(THUMB_WIDTH-t->width)/2;
-			t->y=g.rc.border_width+y*(g.rc.border_width+THUMB_HEIGHT)+(THUMB_HEIGHT-t->height)/2;
+			t->x=g.rc.thumb_padding+x*(g.rc.thumb_padding+THUMB_WIDTH)+(THUMB_WIDTH-t->width)/2;
+			t->y=g.rc.thumb_padding+y*(g.rc.thumb_padding+THUMB_HEIGHT)+(THUMB_HEIGHT-t->height)/2;
 
 			t->right=(i+1)%g.gui.num_thumbs;
 			t->left=(i+g.gui.num_thumbs-1)%g.gui.num_thumbs;
 
 			// Draw it already, damn it!
 			draw_thumbnail(g.x.buffer,t);
-			draw_text(g.x.buffer, g.gui.thumbs[i].id, t->x, t->y, 2);
+			draw_text(g.x.buffer, g.gui.thumbs[i].id, t->x, t->y);
 			}
 	}
 
 	// Populate the final row
 	int left_over=g.gui.num_thumbs-g.gui.width*(g.gui.height-1);
-	int offset=(g.gui.width-left_over)*(g.rc.border_width+THUMB_WIDTH)/2;
+	int offset=(g.gui.width-left_over)*(g.rc.thumb_padding+THUMB_WIDTH)/2;
 	
 	for(x=0; x<left_over; ++x){
 		int i=g.gui.width*y+x;
@@ -176,15 +183,15 @@ int load_pixmap(){
 		t->width=g.gui.thumbs[i].width;
 		t->height=g.gui.thumbs[i].height;
 
-		t->x=g.rc.border_width+x*(g.rc.border_width+THUMB_WIDTH)+(THUMB_WIDTH-t->width)/2;
-		t->y=g.rc.border_width+y*(g.rc.border_width+THUMB_HEIGHT)+(THUMB_HEIGHT-t->height)/2;
+		t->x=g.rc.thumb_padding+x*(g.rc.thumb_padding+THUMB_WIDTH)+(THUMB_WIDTH-t->width)/2+offset;
+		t->y=g.rc.thumb_padding+y*(g.rc.thumb_padding+THUMB_HEIGHT)+(THUMB_HEIGHT-t->height)/2;
 
 		t->right=(i+1)%g.gui.num_thumbs;
 		t->left=(i+g.gui.num_thumbs-1)%g.gui.num_thumbs;
 
 		// Draw it already, damn it!
 		draw_thumbnail(g.x.buffer,t);
-		draw_text(g.x.buffer, g.gui.thumbs[i].id, t->x, t->y, 2);
+		draw_text(g.x.buffer, g.gui.thumbs[i].id, t->x, t->y);
 	}
 	return 0;
 }
@@ -215,29 +222,27 @@ int event_redraw(int x, int y, int width, int height){
 
 int event_move(int new){
 	thumbnail_t o=g.gui.thumbs[g.gui.selected];
-	XDrawRectangle(g.x.display,
-				   g.x.window,
-				   g.x.rgc,
-				   o.x-2, o.y-2,
-				   o.width+4, o.height+4);
-	XDrawRectangle(g.x.display,
-				   g.x.window,
-				   g.x.rgc,
-				   o.x-3, o.y-3,
-				   o.width+6, o.height+6);
+	int pad=g.rc.border_padding, dpad=2*pad;
 
+
+	XSetLineAttributes(g.x.display,g.x.rgc,g.rc.border_padding,LineSolid,CapNotLast,JoinMiter);
+	XSetLineAttributes(g.x.display,g.x.gc,g.rc.border_padding,LineSolid,CapNotLast,JoinMiter);
+
+	XDrawRectangle(g.x.display,
+				   g.x.window,
+				   g.x.rgc,
+				   o.x-pad, o.y-pad,
+				   o.width+dpad, o.height+dpad);
 
 	thumbnail_t n=g.gui.thumbs[new];
 	XDrawRectangle(g.x.display,
 				   g.x.window,
 				   g.x.gc,
-				   n.x-2, n.y-2,
-				   n.width+4, n.height+4);
-	XDrawRectangle(g.x.display,
-				   g.x.window,
-				   g.x.gc,
-				   n.x-3, n.y-3,
-				   n.width+6, n.height+6);
+				   n.x-pad, n.y-pad,
+				   n.width+dpad, n.height+dpad);
+	
+	XSetLineAttributes(g.x.display,g.x.rgc,1,LineSolid,CapNotLast,JoinMiter);
+	XSetLineAttributes(g.x.display,g.x.gc,1,LineSolid,CapNotLast,JoinMiter);
 
 	g.gui.selected = new;
 }
@@ -281,6 +286,7 @@ int event_select(){
 	}
 
 	system(buffer);
+	exit(0);
 	return 0;
 }
 
