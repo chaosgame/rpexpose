@@ -41,13 +41,9 @@ typedef struct _thumbnail thumbnail_t;
 struct _thumbnail{
 	XImage *image;
 
-	int selected;
-	
 	int width, height, x, y;
 
-	int left, right;
-
-	thumbnail_t *next;
+	thumbnail_t *left, *right;
 
 	Window xid;
 	
@@ -57,8 +53,8 @@ struct _thumbnail{
 typedef struct _patricia patricia_t;
 
 struct _patricia{
-	patricia_t *children;
-	int window;
+	patricia_t *children[10];
+	thumbnail_t *window;
 };
 
 typedef struct _global global_t;
@@ -87,12 +83,12 @@ struct _global{
 
 		int num_thumbs;
 		thumbnail_t *thumbs;
-		int selected;
+		thumbnail_t *selected;
 	} gui;
 
 	struct{
 		patricia_t top;
-		patricia_t *loc;
+		patricia_t *selected;
 	} p;
 	
 	struct{
@@ -152,11 +148,11 @@ int event_draw();
 
 int event_redraw(int x, int y, int width, int height);
 
-int event_move(int new);
+int event_move(thumbnail_t *n);
 
 int event_select();
 
-void patricia_insert(char *id, int window);
+void patricia_insert(char *id, thumbnail_t *window);
 
 /* thumbnail.c */
 XImage *thumbnail_generate(Window window);

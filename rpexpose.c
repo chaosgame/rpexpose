@@ -150,16 +150,20 @@ int rpexpose_select(){
 		case MapNotify:
 			XGrabKeyboard(g.x.display,g.x.window,False,GrabModeSync,GrabModeAsync,CurrentTime);
 			break;
-		case KeyPress:
-			switch(g.status){
-			case S_RUNNING:
-				parse_command(g.rc.keybindings[e.xkey.keycode]);
-				break;
-			case S_INSERT:
-				//KeySym keycode=XKeycodeToKeysym(e.xkey.keycode);
-				//if( isspace(keycode) && keycode < 256 )
+		case KeyPress:{
+			KeySym keysym=XKeycodeToKeysym(g.x.display,e.xkey.keycode,0);
+			if( keysym<256 && isdigit(keysym) ){
+				if( g.p.selected->children[keysym-'0'] ){
+					g.status=S_INSERT;
+					g.p.selected=g.p.selected->children[keysym-'0'];
+					event_move(g.p.selected->window);
+				}
 				break;
 			}
+			KeyCode keycode=XKeysymToKeycode(g.x.display,keysym);
+			parse_command(g.rc.keybindings[keycode]);
+			break;
+		}
 		case Expose:
 			event_redraw(e.xexpose.x,e.xexpose.y,e.xexpose.width,e.xexpose.height);
 			event_move(g.gui.selected);
@@ -171,20 +175,30 @@ int rpexpose_select(){
 
 void clean_up(){
 	g.status=S_SHUTDOWN;
-	int i;
-	for(i=0; i<256; ++i) free(g.rc.keybindings[i]);
-
-	for(i=0; i<g.gui.num_thumbs; ++i){
-		free(g.gui.thumbs[i].name);
-		free(g.gui.thumbs[i].id);
-		XFree(g.gui.thumbs[i].image);
-	}
-
-	free(g.gui.thumbs);
-
-	XFreePixmap(g.x.display,g.x.buffer);
 
 	XUngrabKeyboard(g.x.display,CurrentTime);
+	XUnmapWindow(g.x.display,g.x.window);
+	
+	{
+		int i;
+		for(i=0; i<256; ++i) free(g.rc.keybindings[i]);
+	}
+
+	{
+		thumbnail_t *i=g.gui.thumbs, *prev;
+		i->right->left=NULL;
+		while(i){
+			free(i->name);
+			free(i->id);
+			XFree(i->image);
+			prev=i;
+			i=i->left;
+			free(prev);
+		}
+	}
+	
+	XFreePixmap(g.x.display,g.x.buffer);
+
 	XCloseDisplay(g.x.display);
 	return;
 }

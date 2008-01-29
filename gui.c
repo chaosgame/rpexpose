@@ -4,10 +4,10 @@ int load_input(){
 	// Parse the input file, and generate a linked list of thumbnails
 	char buffer[BUFFER_SIZE];
 	
-	thumbnail_t *head=NULL, *i=NULL;
+	thumbnail_t *i=NULL;
 
 	g.gui.num_thumbs=0;
-	g.gui.thumbs=NULL;
+	g.p.selected=&g.p.top;
 
 	for(;;){
 		fgets(buffer,BUFFER_SIZE,g.file.handle);
@@ -17,14 +17,20 @@ int load_input(){
 		char *id, *p=buffer;
 	
 		// Does the list exist? create it!
-		if(i){
-			i->next=malloc(sizeof(thumbnail_t));
-			i=i->next;
+		if(!i){
+			i=g.gui.thumbs=malloc(sizeof(thumbnail_t));
+			i->right=i;
+			i->left=i;
 		} else {
-			head=i=malloc(sizeof(thumbnail_t));
+			thumbnail_t *tmp=malloc(sizeof(thumbnail_t));
+			i->right->left=tmp;
+			tmp->right=i->right;
+			i->right=tmp;
+			tmp->left=i;
+			i=tmp;
 		}
-
-		i->selected=atoi(p);
+		if( atoi(p) )
+			g.gui.selected=i;
 		while( *p++!=':' );
 		
 		i->xid=atoi(p);
@@ -35,49 +41,28 @@ int load_input(){
 		*(p-1)='\0';
 		i->id=strdup(id);
 
+		sprintf(buffer,"%s/.rpexpose/%i",g.file.home,i->xid);
+		
+		// Read in the file
+		if(g.gui.selected==i){
+			XImage *ximage=thumbnail_generate(i->xid);
+			i->image=ximage;
+			i->width=ximage->width;
+			i->height=ximage->height;
+			thumbnail_write(ximage,buffer);
+		}else{
+			i->image=thumbnail_read(buffer);
+			i->width=i->image->width;
+			i->height=i->image->height;
+		}
+
+		patricia_insert(i->id,i);
+
 		i->name=strdup(p);
-		i->next=NULL;
 		g.gui.num_thumbs++;
 	}
 
-	
 	load_xwindow();
-
-	// Transfer that linked list to an array (now that we know the length) for faster random access
-	g.gui.thumbs=malloc(g.gui.num_thumbs*sizeof(thumbnail_t));
-	g.gui.selected=-1;
-
-
-	int j;
-	thumbnail_t *prev=NULL;
-	for(j=0, i=head; i; i=i->next, ++j){
-		free(prev);
-		sprintf(buffer,"%s/.rpexpose/%i",g.file.home,i->xid);
-
-		// Read in the file
-		if(i->selected && g.gui.selected==-1){
-			XImage *ximage=thumbnail_generate(i->xid);
-			g.gui.thumbs[j].image=ximage;
-			g.gui.thumbs[j].width=ximage->width;
-			g.gui.thumbs[j].height=ximage->height;
-			thumbnail_write(ximage,buffer);
-			g.gui.selected=j;
-		}else{
-			g.gui.thumbs[j].image=thumbnail_read(buffer);
-			g.gui.thumbs[j].width=g.gui.thumbs[j].image->width;
-			g.gui.thumbs[j].height=g.gui.thumbs[j].image->height;
-		}
-
-
-		// Get the X geometry
-		g.gui.thumbs[j].xid=i->xid;
-		g.gui.thumbs[j].id=i->id;
-		g.gui.thumbs[j].name=i->name;
-		prev=i;
-
-		patricia_insert(g.gui.thumbs[j].id,j);
-	}
-	free(prev);
 
 	return 0;
 }
@@ -155,46 +140,33 @@ inline int draw_thumbnail(Drawable d, thumbnail_t *t){
 
 int load_buffer(){
 	int x, y, i;
+	thumbnail_t *t=g.gui.thumbs;
 	for(y=0; y<g.gui.height-1; ++y){
 		for(x=0; x<g.gui.width; ++x){
-			int i=g.gui.width*y+x;
-			thumbnail_t *t=&g.gui.thumbs[i];
-
-			t->width=g.gui.thumbs[i].width;
-			t->height=g.gui.thumbs[i].height;
-
 			t->x=g.rc.thumb_padding+x*(g.rc.thumb_padding+THUMB_WIDTH)+(THUMB_WIDTH-t->width)/2;
 			t->y=g.rc.thumb_padding+y*(g.rc.thumb_padding+THUMB_HEIGHT)+(THUMB_HEIGHT-t->height)/2;
 
-			t->right=(i+1)%g.gui.num_thumbs;
-			t->left=(i+g.gui.num_thumbs-1)%g.gui.num_thumbs;
-
 			// Draw it already, damn it!
 			draw_thumbnail(g.x.buffer,t);
-			draw_text(g.x.buffer, g.gui.thumbs[i].id, t->x, t->y);
+			draw_text(g.x.buffer, t->id, t->x, t->y);
+
+			t=t->right;
 			}
 	}
 
 	// Populate the final row
-	int left_over=g.gui.num_thumbs-g.gui.width*(g.gui.height-1);
-	int offset=(g.gui.width-left_over)*(g.rc.thumb_padding+THUMB_WIDTH)/2;
+	int right_over=g.gui.num_thumbs-g.gui.width*(g.gui.height-1);
+	int offset=(g.gui.width-right_over)*(g.rc.thumb_padding+THUMB_WIDTH)/2;
 	
-	for(x=0; x<left_over; ++x){
-		int i=g.gui.width*y+x;
-		thumbnail_t *t=&g.gui.thumbs[i];
-
-		t->width=g.gui.thumbs[i].width;
-		t->height=g.gui.thumbs[i].height;
-
+	for(x=0; x<right_over; ++x){
 		t->x=g.rc.thumb_padding+x*(g.rc.thumb_padding+THUMB_WIDTH)+(THUMB_WIDTH-t->width)/2+offset;
 		t->y=g.rc.thumb_padding+y*(g.rc.thumb_padding+THUMB_HEIGHT)+(THUMB_HEIGHT-t->height)/2;
 
-		t->right=(i+1)%g.gui.num_thumbs;
-		t->left=(i+g.gui.num_thumbs-1)%g.gui.num_thumbs;
-
 		// Draw it already, damn it!
 		draw_thumbnail(g.x.buffer,t);
-		draw_text(g.x.buffer, g.gui.thumbs[i].id, t->x, t->y);
+		draw_text(g.x.buffer, t->id, t->x, t->y);
+		
+		t=t->right;
 	}
 	return 0;
 }
@@ -223,8 +195,8 @@ int event_redraw(int x, int y, int width, int height){
 	return 0;
 }
 
-int event_move(int new){
-	thumbnail_t o=g.gui.thumbs[g.gui.selected];
+int event_move(thumbnail_t *n){
+	thumbnail_t *o=g.gui.selected;
 	int pad=g.rc.border_padding, dpad=2*pad;
 
 
@@ -234,20 +206,19 @@ int event_move(int new){
 	XDrawRectangle(g.x.display,
 				   g.x.window,
 				   g.x.rgc,
-				   o.x-pad, o.y-pad,
-				   o.width+dpad, o.height+dpad);
+				   o->x-pad, o->y-pad,
+				   o->width+dpad, o->height+dpad);
 
-	thumbnail_t n=g.gui.thumbs[new];
 	XDrawRectangle(g.x.display,
 				   g.x.window,
 				   g.x.gc,
-				   n.x-pad, n.y-pad,
-				   n.width+dpad, n.height+dpad);
+				   n->x-pad, n->y-pad,
+				   n->width+dpad, n->height+dpad);
 	
 	XSetLineAttributes(g.x.display,g.x.rgc,1,LineSolid,CapNotLast,JoinMiter);
 	XSetLineAttributes(g.x.display,g.x.gc,1,LineSolid,CapNotLast,JoinMiter);
 
-	g.gui.selected = new;
+	g.gui.selected = n;
 }
 
 int event_select(){
@@ -273,14 +244,14 @@ int event_select(){
 	
 		switch(*i){
 		case 'x':
-			sprintf(temp,"%i",g.gui.thumbs[g.gui.selected].xid);
+			sprintf(temp,"%i",g.gui.selected->xid);
 			strcat(buffer,temp);
 			break;
 		case 'n':
-			strcat(buffer,g.gui.thumbs[g.gui.selected].name);
+			strcat(buffer,g.gui.selected->name);
 			break;
 		case 'i':
-			sprintf(temp,"%s",g.gui.thumbs[g.gui.selected].id);
+			sprintf(temp,"%s",g.gui.selected->id);
 			strcat(buffer,temp);
 			break;
 		default:
@@ -293,14 +264,18 @@ int event_select(){
 	return 0;
 }
 
-void patricia_insert(char *id, int window){
+void patricia_insert(char *id, thumbnail_t *window){
 	char *i=id;
 	patricia_t *p=&g.p.top;
 
 	while(*i){
-		if( !p->children )
-			p->children=malloc(10*sizeof(patricia_t));
-		p=&p->children[*i-'0'];
+		if( !p->children[*i-'0'] ){
+			p->children[*i-'0']=malloc(sizeof(patricia_t));
+			int j;
+			for(j=0; j<10; ++j)
+				p->children[*i-'0']->children[j]=NULL;
+		}
+		p=p->children[*i-'0'];
 		++i;
 	}
 	p->window=window;

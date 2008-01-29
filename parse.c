@@ -34,15 +34,15 @@ int load_rcdefaults(){
 	int i;
 	for(i=0; i<256; ++i)
 		g.rc.keybindings[i]=NULL;
-
-	g.p.top.children=NULL;
+	for(i=0; i<10; ++i)
+			g.p.top.children[i]=NULL;
 
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Left)]=strdup("left");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Up)]=strdup("up");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Down)]=strdup("down");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Right)]=strdup("right");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Return)]=strdup("select");
-	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Escape)]=strdup("quit");
+	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Escape)]=strdup("escape");
 
 	g.rc.colon_exec=strdup("ratpoison -c \"select %s\"");
 	g.rc.select_exec=strdup("ratpoison -c \"select %i\"");
@@ -86,23 +86,22 @@ int parse_command(char *command){
 	
 	switch(g.status){
 	case S_INSERT:
-//		if( !strcmp(command,"escape") )
-//			return insert_exit();
-		if( !strcmp(command,"select") )
-			return event_select();
 	case S_RUNNING:
-		if( !strcmp(command,"escape") )
-			exit(0);
+		if( !strcmp(command,"escape") ){
+			g.status=S_RUNNING;
+			g.p.selected=&g.p.top;
+			return 0;
+		}
 		if( !strcmp(command,"quit") )
 			exit(0);
 		if( !strcmp(command,"left") )
-			return event_move(g.gui.thumbs[g.gui.selected].left);
+			return event_move(g.gui.selected->left);
 		if( !strcmp(command,"right") )
-			return event_move(g.gui.thumbs[g.gui.selected].right);
+			return event_move(g.gui.selected->right);
 		if( !strcmp(command,"up") )
-			return event_move(g.gui.thumbs[g.gui.selected].left);
+			return event_move(g.gui.selected->left);
 		if( !strcmp(command,"down") )
-			return event_move(g.gui.thumbs[g.gui.selected].right);
+			return event_move(g.gui.selected->right);
 		if( !strcmp(command,"select") )
 			return event_select();
 	case S_STARTUP:
