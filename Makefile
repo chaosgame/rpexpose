@@ -1,6 +1,6 @@
-INCLUDE=`pkg-config --cflags x11`
+INCLUDE=`pkg-config --cflags x11` rpexpose.h
 LIBS=`pkg-config --libs x11` -lm
-OBJECTS=rpexpose.o parse.o thumbnail.o gui.o colon.o
+OBJECTS=rpexpose.o parse.o thumbnail.o gui.o
 BINARY=rpexpose
 
 all: ${BINARY}
@@ -15,4 +15,4 @@ install: ${BINARY}
 	cp ${BINARY} /usr/local/bin
 
 clean:
-	rm -f ${OBJECTS} ${BINARY}
+	rm -f ${OBJECTS} ${BINARY} *.gch

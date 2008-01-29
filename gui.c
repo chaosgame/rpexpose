@@ -68,11 +68,14 @@ int load_input(){
 			g.gui.thumbs[j].height=g.gui.thumbs[j].image->height;
 		}
 
+
 		// Get the X geometry
 		g.gui.thumbs[j].xid=i->xid;
 		g.gui.thumbs[j].id=i->id;
 		g.gui.thumbs[j].name=i->name;
 		prev=i;
+
+		patricia_insert(g.gui.thumbs[j].id,j);
 	}
 	free(prev);
 
@@ -288,5 +291,18 @@ int event_select(){
 	system(buffer);
 	exit(0);
 	return 0;
+}
+
+void patricia_insert(char *id, int window){
+	char *i=id;
+	patricia_t *p=&g.p.top;
+
+	while(*i){
+		if( !p->children )
+			p->children=malloc(10*sizeof(patricia_t));
+		p=&p->children[*i-'0'];
+		++i;
+	}
+	p->window=window;
 }
 

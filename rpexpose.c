@@ -141,7 +141,7 @@ int rpexpose_select(){
 	
 	XMapWindow(g.x.display,g.x.window);
 
-	g.status=S_SELECT;
+	g.status=S_RUNNING;
 
 	XEvent e;
 	for(;;){
@@ -152,41 +152,17 @@ int rpexpose_select(){
 			break;
 		case KeyPress:
 			switch(g.status){
-			case S_COLON:
-				if(g.colon.length<BUFFER_SIZE){
-					KeySym keysym=XKeycodeToKeysym(g.x.display,e.xkey.keycode,0);
-					if( keysym<=255 && isascii(keysym) ){
-						colon_refresh(keysym);
-						colon_redraw();
-					}
-					else{
-						parse_command(g.rc.keybindings[e.xkey.keycode]);
-					}
-				}
+			case S_RUNNING:
+				parse_command(g.rc.keybindings[e.xkey.keycode]);
 				break;
-			case S_SELECT:
-			default:{
-				char *command=g.rc.keybindings[e.xkey.keycode];
-				if( command )
-					parse_command(command);
-				else{
-					KeySym keysym=XKeycodeToKeysym(g.x.display,e.xkey.keycode,0);
-					if(keysym<=255 && isascii(keysym)){
-						colon_init();
-						colon_refresh(keysym);
-						colon_redraw();
-					}
-				}
-			}
+			case S_INSERT:
+				//KeySym keycode=XKeycodeToKeysym(e.xkey.keycode);
+				//if( isspace(keycode) && keycode < 256 )
+				break;
 			}
 		case Expose:
-			switch(g.status){
-			case S_COLON:
-				colon_redraw();
-			case S_SELECT:
-				event_redraw(e.xexpose.x,e.xexpose.y,e.xexpose.width,e.xexpose.height);
-				event_move(g.gui.selected);
-			}
+			event_redraw(e.xexpose.x,e.xexpose.y,e.xexpose.width,e.xexpose.height);
+			event_move(g.gui.selected);
 		}
 	}
 	return 0;

@@ -35,6 +35,8 @@ int load_rcdefaults(){
 	for(i=0; i<256; ++i)
 		g.rc.keybindings[i]=NULL;
 
+	g.p.top.children=NULL;
+
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Left)]=strdup("left");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Up)]=strdup("up");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Down)]=strdup("down");
@@ -83,14 +85,12 @@ int parse_command(char *command){
 	if(*command=='\0') return 0;
 	
 	switch(g.status){
-	case S_COLON:
-		if( !strcmp(command,"escape") )
-			return colon_exit(2);
+	case S_INSERT:
+//		if( !strcmp(command,"escape") )
+//			return insert_exit();
 		if( !strcmp(command,"select") )
-			return colon_select();
-	case S_SELECT:
-		if( !strcmp(command,"colon") )
-			return colon_init(2);
+			return event_select();
+	case S_RUNNING:
 		if( !strcmp(command,"escape") )
 			exit(0);
 		if( !strcmp(command,"quit") )

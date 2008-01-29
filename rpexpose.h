@@ -34,7 +34,7 @@
 #define THUMB_SIZE		(THUMB_BPL*THUMB_HEIGHT)
 
 typedef enum {A_UNKNOWN=0, A_CLEAR, A_GENERATE, A_SELECT} action_t;
-typedef enum {S_STARTUP, S_SELECT, S_COLON, S_SHUTDOWN} status_t;
+typedef enum {S_STARTUP, S_RUNNING, S_INSERT, S_SHUTDOWN} status_t;
 
 typedef struct _thumbnail thumbnail_t;
 
@@ -52,6 +52,13 @@ struct _thumbnail{
 	Window xid;
 	
 	char *name, *id;
+};
+
+typedef struct _patricia patricia_t;
+
+struct _patricia{
+	patricia_t *children;
+	int window;
 };
 
 typedef struct _global global_t;
@@ -82,6 +89,11 @@ struct _global{
 		thumbnail_t *thumbs;
 		int selected;
 	} gui;
+
+	struct{
+		patricia_t top;
+		patricia_t *loc;
+	} p;
 	
 	struct{
 		Display *display;
@@ -144,21 +156,14 @@ int event_move(int new);
 
 int event_select();
 
+void patricia_insert(char *id, int window);
+
 /* thumbnail.c */
 XImage *thumbnail_generate(Window window);
 
 int thumbnail_write(XImage *thumbnail, char *filename);
 
 XImage *thumbnail_read(char *filename);
-
-/* colon.c */
-int colon_redraw();
-
-int colon_refresh(char c);
-
-int colon_init();
-
-int colon_exit();
 
 #endif
 
