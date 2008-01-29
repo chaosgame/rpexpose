@@ -1,6 +1,6 @@
 #include "rpexpose.h"
 
-const char *argp_program_version = "rpexpose 0.1.0";
+const char *argp_program_version = "rpexpose 0.1.13";
 
 const char *argp_program_bug_address = "<nlawren2@uiuc.edu>";
 
@@ -154,7 +154,6 @@ int rpexpose_select(){
 			KeySym keysym=XKeycodeToKeysym(g.x.display,e.xkey.keycode,0);
 			if( keysym<256 && isdigit(keysym) ){
 				if( g.p.selected->children[keysym-'0'] ){
-					g.status=S_INSERT;
 					g.p.selected=g.p.selected->children[keysym-'0'];
 					event_move(g.p.selected->window);
 				}

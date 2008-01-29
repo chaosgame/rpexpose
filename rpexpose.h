@@ -34,7 +34,7 @@
 #define THUMB_SIZE		(THUMB_BPL*THUMB_HEIGHT)
 
 typedef enum {A_UNKNOWN=0, A_CLEAR, A_GENERATE, A_SELECT} action_t;
-typedef enum {S_STARTUP, S_RUNNING, S_INSERT, S_SHUTDOWN} status_t;
+typedef enum {S_STARTUP, S_RUNNING, S_SHUTDOWN} status_t;
 
 typedef struct _thumbnail thumbnail_t;
 
@@ -62,14 +62,6 @@ typedef struct _global global_t;
 struct _global{
 	status_t status;
 	action_t action;
-
-	struct{
-		XFontStruct *font;
-		int height, width, x, y;
-		char buffer[BUFFER_SIZE];
-		int length;
-		int cursor;
-	} colon;
 
 	struct{	
 		char *name;
@@ -101,7 +93,7 @@ struct _global{
 	} x;
 
 	struct{
-		char *select_exec, *colon_exec;
+		char *select_exec;
 
 		int widescreen;
 

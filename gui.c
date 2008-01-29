@@ -41,6 +41,8 @@ int load_input(){
 		*(p-1)='\0';
 		i->id=strdup(id);
 
+		i->name=strdup(p);
+		
 		sprintf(buffer,"%s/.rpexpose/%i",g.file.home,i->xid);
 		
 		// Read in the file
@@ -58,7 +60,6 @@ int load_input(){
 
 		patricia_insert(i->id,i);
 
-		i->name=strdup(p);
 		g.gui.num_thumbs++;
 	}
 
@@ -259,6 +260,7 @@ int event_select(){
 		}
 	}
 
+	printf("%s\n",buffer);
 	system(buffer);
 	exit(0);
 	return 0;

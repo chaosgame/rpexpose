@@ -1,3 +1,4 @@
 #! /bin/sh
 ratpoison -c "windows %s:%i:%n:%t" |
-sed -e "s/^*:/1:/" -e "s/^[+-]:/0:/"
+sed -e "s/^*:/1:/" -e "s/^[+-]:/0:/" |
+rpexpose -s -

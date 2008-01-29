@@ -6,23 +6,23 @@
 set widescreen true
 
 # Set the border between thumbnails to be 8 pixels
-set border_width 8
+set thumb_padding 8
+set border_padding 3
+set text_padding 4
+set select_exec ratpoison -c "select %i"
 
 # Set VI keybindings, with arrow keys
-bind h left
-bind j down
-bind k up
-bind l right
-bind q quit
-bind Right right
-bind Left left
-bind Up up
-bind Down down
-bind space select
-bind Return select
+bind h		left
+bind j		down
+bind k		up
+bind l		right
+bind q 		quit
+bind Escape	escape
+bind space	select
+bind Return	select
 
-# Be annoying
+# And you can launch programs from RpExpose!
 bind m exec ratpoison -c "echo You pressed the M key!"
 
 # Run a sample command on startup
-#exec ratpoison -c "echo This is an example message from the rc file"
+exec ratpoison -c "echo This is an example message from the rc file"

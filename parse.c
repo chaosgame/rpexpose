@@ -37,14 +37,14 @@ int load_rcdefaults(){
 	for(i=0; i<10; ++i)
 			g.p.top.children[i]=NULL;
 
-	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Left)]=strdup("left");
-	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Up)]=strdup("up");
-	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Down)]=strdup("down");
-	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Right)]=strdup("right");
-	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Return)]=strdup("select");
+	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_h)]=strdup("left");
+	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_k)]=strdup("up");
+	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_j)]=strdup("down");
+	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_l)]=strdup("right");
+	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_q)]=strdup("quit");
+	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_space)]=strdup("select");
 	g.rc.keybindings[XKeysymToKeycode(g.x.display, XK_Escape)]=strdup("escape");
 
-	g.rc.colon_exec=strdup("ratpoison -c \"select %s\"");
 	g.rc.select_exec=strdup("ratpoison -c \"select %i\"");
 
 	g.rc.text_padding=2;
@@ -85,7 +85,6 @@ int parse_command(char *command){
 	if(*command=='\0') return 0;
 	
 	switch(g.status){
-	case S_INSERT:
 	case S_RUNNING:
 		if( !strcmp(command,"escape") ){
 			g.status=S_RUNNING;
