@@ -1,6 +1,8 @@
 #include "rpexpose.h"
 
-const char *argp_program_version = "rpexpose 0.1.13";
+extern const int BUFFER_SIZE;
+
+const char *argp_program_version = "rpexpose 0.1.14";
 
 const char *argp_program_bug_address = "<nlawren2@uiuc.edu>";
 
@@ -81,19 +83,21 @@ int rpexpose_clean(){
 
 	if(directory){
 		while( ep = readdir(directory) ){
+			if( *(ep->d_name)=='.' ) continue;
 			sprintf(filename,"%s/.rpexpose/%s",g.file.home,ep->d_name);
 			if( remove(filename) ){
 				perror("Could not delete file");
+				closedir(directory);
 				return 1;
 			}
 		}
-		closedir(directory);
 	}
 	else{
 		perror("Couldn't open $HOME/.rpexpose/\n");
 		return 1;
 	}
 	
+	closedir(directory);
 	return 0;
 }
 
@@ -107,11 +111,14 @@ int rpexpose_generate(){
 	sprintf(filename,"%s/.rpexpose/",g.file.home);
 
 	DIR *directory = opendir(filename);
-	if(!directory)
+	if(!directory){
 		if( mkdir(filename,0755) ){
 			perror("Could not create directory");
 			exit(1);
 		}
+	}else{
+		closedir(directory);
+	}
 
 	while(!feof(g.file.handle)){
 		fscanf(g.file.handle,"%i\n",&window);
@@ -119,7 +126,7 @@ int rpexpose_generate(){
 
 		sprintf(filename, "%s/.rpexpose/%i", g.file.home, window);
 		thumbnail_write(thumbnail,filename);
-		XFree(thumbnail);
+		XDestroyImage(thumbnail);
 	}
 
 	XCloseDisplay(g.x.display);
@@ -189,15 +196,17 @@ void clean_up(){
 		while(i){
 			free(i->name);
 			free(i->id);
-			XFree(i->image);
+			XDestroyImage(i->image);
 			prev=i;
 			i=i->left;
 			free(prev);
 		}
 	}
+
+	XFreeGC(g.x.display,g.x.gc);
+	XFreeGC(g.x.display,g.x.rgc);
 	
 	XFreePixmap(g.x.display,g.x.buffer);
-
 	XCloseDisplay(g.x.display);
 	return;
 }

@@ -1,5 +1,15 @@
 #include "rpexpose.h"
 
+const int NORMAL_WIDTH=4;
+const int NORMAL_HEIGHT=3;
+const int WIDE_WIDTH=16;
+const int WIDE_HEIGHT=9;
+
+extern const int THUMB_WIDTH;
+extern const int THUMB_HEIGHT;
+extern const int BUFFER_SIZE;
+extern const int SMALL_BUFFER_SIZE;
+
 int load_input(){
 	// Parse the input file, and generate a linked list of thumbnails
 	char buffer[BUFFER_SIZE];
@@ -112,17 +122,24 @@ int load_xwindow(){
 	g.x.buffer = XCreatePixmap(g.x.display, g.x.window, g.x.width, g.x.height, XDefaultDepth(g.x.display,0));
 
 	XFillRectangle(g.x.display, g.x.buffer, g.x.rgc, 0, 0, g.x.width, g.x.height);
-	
+
 	return 0;
 }
 
 inline int draw_text(Drawable d, char *text, int x, int y){
-	int len=strlen(text);
-	XFontStruct *font=XQueryFont(g.x.display,XGContextFromGC(g.x.gc));
-	
-	int height=font->max_bounds.ascent+2*g.rc.text_padding;
+	int len=strlen(text), direction, ascent, descent;
 
-	int width=XTextWidth(font,text,len)+2*g.rc.text_padding;
+	XCharStruct charstruct;
+
+	XQueryTextExtents(g.x.display,
+							XGContextFromGC(g.x.gc),
+							text, len,
+							&direction, &ascent, &descent, &charstruct);
+
+	int height=ascent+2*g.rc.text_padding;
+
+	int width=charstruct.width+2*g.rc.text_padding;
+	//XTextWidth(g.gui.font,text,len)+2*g.rc.text_padding;
 
 	XFillRectangle(g.x.display, g.x.buffer, g.x.rgc, x, y, width, height);
 

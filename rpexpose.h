@@ -13,26 +13,6 @@
 #include <X11/Xos.h>
 #include <X11/xpm.h>
 
-
-/* parse.c */
-#define BUFFER_SIZE			1024
-#define SMALL_BUFFER_SIZE	128
-#define ARGV_SIZE			64
-
-/* gui.c */
-#define NORMAL_WIDTH		4
-#define NORMAL_HEIGHT	3
-#define WIDE_WIDTH		16
-#define WIDE_HEIGHT		9
-
-/* thumbnail.c */
-#define THUMB_WIDTH		128
-#define THUMB_HEIGHT		128
-#define THUMB_PADDING	32
-#define THUMB_OFFSET		0
-#define THUMB_BPL			(4*THUMB_WIDTH)
-#define THUMB_SIZE		(THUMB_BPL*THUMB_HEIGHT)
-
 typedef enum {A_UNKNOWN=0, A_CLEAR, A_GENERATE, A_SELECT} action_t;
 typedef enum {S_STARTUP, S_RUNNING, S_SHUTDOWN} status_t;
 

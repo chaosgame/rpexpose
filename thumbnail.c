@@ -1,5 +1,10 @@
 #include "rpexpose.h"
 
+const int THUMB_WIDTH=128;
+const int THUMB_HEIGHT=128;
+const int THUMB_PADDING=32;
+const int THUMB_OFFSET=0;
+
 XImage *thumbnail_generate(Window window){
 	unsigned int width, height, depth, border, offset, scale, x, y, thumb_width, thumb_height;
 	Window root;

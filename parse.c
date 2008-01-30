@@ -4,6 +4,10 @@
 
 #include "rpexpose.h"
 
+const int BUFFER_SIZE=1024;
+const int SMALL_BUFFER_SIZE=128;
+const int ARGV_SIZE=64;
+
 char *parse_split(char *command){
 	// Read until a space is found
 	char *arguments=command;
