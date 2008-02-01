@@ -84,6 +84,7 @@ int rpexpose_clean(){
 	if(directory){
 		while( ep = readdir(directory) ){
 			if( *(ep->d_name)=='.' ) continue;
+			if( !strcmp(ep->d_name, "default") ) continue;
 			sprintf(filename,"%s/.rpexpose/%s",g.file.home,ep->d_name);
 			if( remove(filename) ){
 				perror("Could not delete file");

@@ -44,23 +44,17 @@ struct _global{
 	action_t action;
 
 	struct{	
-		char *name;
+		char *name, *home;
 		FILE *handle;
-
-		char *home;
 	} file;
 
 	struct{
-		int width, height;
-
-		int num_thumbs;
-		thumbnail_t *thumbs;
-		thumbnail_t *selected;
+		int width, height, num_thumbs;
+		thumbnail_t *thumbs, *selected;
 	} gui;
 
 	struct{
-		patricia_t top;
-		patricia_t *selected;
+		patricia_t top, *selected;
 	} p;
 	
 	struct{
@@ -68,8 +62,7 @@ struct _global{
 		Window window;
 		Pixmap buffer;
 		int width, height;
-		GC gc;
-		GC rgc;
+		GC gc, rgc;
 	} x;
 
 	struct{

@@ -6,21 +6,23 @@ const int THUMB_PADDING=32;
 const int THUMB_OFFSET=0;
 
 XImage *thumbnail_generate(Window window){
-	unsigned int width, height, depth, border, offset, scale, x, y, thumb_width, thumb_height;
+	unsigned int width, height, depth, border, offset, x, y, thumb_width, thumb_height;
+	double scale;
 	Window root;
 	XGetGeometry(g.x.display, window, &root, &x, &y, &width, &height, &border, &depth);
 
 	XImage *ximage=XGetImage(g.x.display, window, 0, 0, width, height, AllPlanes, ZPixmap);
 
 	Visual *visual=XDefaultVisual(g.x.display,0);
-	char *thumbnail_data;
 
-	if( height > width ){
-		scale=height/THUMB_HEIGHT;
+	if(width <= THUMB_WIDTH && height <= THUMB_HEIGHT){
+		return ximage;
+	}else if( height > width ){
+		scale=1.0*height/THUMB_HEIGHT;
 		thumb_width=width/scale;
 		thumb_height=THUMB_HEIGHT;
 	}else{
-		scale=width/THUMB_WIDTH;
+		scale=1.0*width/THUMB_WIDTH;
 		thumb_height=height/scale;
 		thumb_width=THUMB_WIDTH;
 	}
@@ -64,7 +66,19 @@ int thumbnail_write(XImage *thumbnail, char *filename){
 }
 
 XImage *thumbnail_read(char *filename){
+	Visual *visual=XDefaultVisual(g.x.display,0);
+	
 	FILE *file=fopen(filename, "rb");
+	if( !file ){
+		char *data=malloc(THUMB_WIDTH*THUMB_HEIGHT*4);
+		memset(data,-1,THUMB_WIDTH*THUMB_HEIGHT*4);
+		return XCreateImage(g.x.display, visual,
+							 	  XDefaultDepth(g.x.display,0), ZPixmap,
+								  THUMB_OFFSET, data,
+								  THUMB_WIDTH, THUMB_HEIGHT,
+								  THUMB_PADDING, 4*THUMB_WIDTH);
+	}
+
 	header_t h;
 	fread(&h,sizeof(header_t),1,file);
 	
@@ -75,8 +89,6 @@ XImage *thumbnail_read(char *filename){
 
 	fclose(file);
 	
-	Visual *visual=XDefaultVisual(g.x.display,0);
-
 	return XCreateImage(g.x.display, visual,
 					    h.depth, ZPixmap,
 						THUMB_OFFSET, data,

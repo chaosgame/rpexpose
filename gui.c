@@ -28,9 +28,7 @@ int load_input(){
 	
 		// Does the list exist? create it!
 		if(!i){
-			i=g.gui.thumbs=malloc(sizeof(thumbnail_t));
-			i->right=i;
-			i->left=i;
+			i->right=i->left=i=g.gui.thumbs=malloc(sizeof(thumbnail_t));
 		} else {
 			thumbnail_t *tmp=malloc(sizeof(thumbnail_t));
 			i->right->left=tmp;
@@ -216,7 +214,6 @@ int event_redraw(int x, int y, int width, int height){
 int event_move(thumbnail_t *n){
 	thumbnail_t *o=g.gui.selected;
 	int pad=g.rc.border_padding, dpad=2*pad;
-
 
 	XSetLineAttributes(g.x.display,g.x.rgc,g.rc.border_padding,LineSolid,CapNotLast,JoinMiter);
 	XSetLineAttributes(g.x.display,g.x.gc,g.rc.border_padding,LineSolid,CapNotLast,JoinMiter);
