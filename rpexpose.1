@@ -1,0 +1,29 @@
+.TH RPEXPOSE 1 2008-02-01
+.SH NAME
+RpExpose \- Ratpoison Task Switcher
+.SH SYNOPSIS
+.ad 1
+.B rpexpose --generate file
+.nf
+.B rpespose --select file
+.nf
+.B rpexpose --clean
+.fi
+After making and installing RpExpose,  add the following to your .ratpoisonrc file:
+.sp 1
+.ad 1
+.B addhook switchwin exec rpthumb
+.nf
+.B addhook quit exec rpexpose --clean
+.nf
+.B bind <key> exec rpselect
+.br
+.SH USING RPEXPOSE
+When RpExpose is called, by default you can change the selected window by using VIM style keybindings to move left and right between windows.
+You can also use the number keys to select the window with the given id number.  
+Escape clears the buffer used to store the number keys so to allow you to use the number keys to select another window.
+q quits out of RpExpose without selecting any windows.
+Space and Return select the currently selected window.
+.br
+.SH CONFIGURING YOUR RPEXPOSERC
+RpExpose comes with an example .rpexposerc file for your convenience.  RpExpose is configured in a similar manner to Ratpoison, you can bind, unbind keys and set various appearance options.

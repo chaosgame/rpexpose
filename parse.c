@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "rpexpose.h"
 
 const int BUFFER_SIZE=1024;

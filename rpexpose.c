@@ -2,7 +2,7 @@
 
 extern const int BUFFER_SIZE;
 
-const char *argp_program_version = "rpexpose 0.1.14";
+const char *argp_program_version = "rpexpose 0.1.17";
 
 const char *argp_program_bug_address = "<nlawren2@uiuc.edu>";
 

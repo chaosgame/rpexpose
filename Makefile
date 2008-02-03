@@ -1,18 +1,23 @@
 INCLUDE=`pkg-config --cflags x11` rpexpose.h
 LIBS=`pkg-config --libs x11` -lm
 OBJECTS=rpexpose.o parse.o thumbnail.o gui.o
-BINARY=rpexpose
+DESTDIR=/usr/local/bin
 
-all: ${BINARY}
+all: rpexpose
 
-${BINARY}: ${OBJECTS}
+rpexpose: ${OBJECTS}
 	${CC} ${CFLAGS} ${OBJECTS} ${LIBS} -g -o $@ 
 
 .c.o:
 	${CC} ${CFLAGS} ${INCLUDE} -g -c $^
 
-install: ${BINARY}
-	cp ${BINARY} /usr/local/bin
+install: rpexpose
+	cp rpthumb rpselect ${BINARY} ${DESTDIR}
+	@echo
+	@echo Add the following lines to your .ratpoisonrc file
+	@echo addhook exec switchwin rpthumb
+	@echo addhook quit exec rpexpose --clean
+	@echo bind \<key\> exec rpselect
 
 clean:
-	rm -f ${OBJECTS} ${BINARY} *.gch
+	rm -f rpexpose *.gch *.o
