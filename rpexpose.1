@@ -1,30 +1,125 @@
 .TH RPEXPOSE 1 2008-02-01
 .SH NAME
-RpExpose \- Ratpoison Task Switcher
+RpExpose \- The Ratpoison Graphical Pager
 .SH SYNOPSIS
-.ad 1
-.B rpexpose --generate file
-.nf
-.B rpespose --select file
-.nf
-.B rpexpose --clean
-.fi
-After making and installing RpExpose,  add the following to your .ratpoisonrc file:
-.sp 1
-.ad 1
-.B addhook switchwin exec rpthumb
-.nf
-.B addhook quit exec rpexpose --clean
-.nf
-.B bind <key> exec rpselect
 .br
-.SH USING RPEXPOSE
-When RpExpose is called, by default you can change the selected window by using VIM style keybindings to move left and right between windows.
-You can also use the number keys to select the window with the given id number.  
-Escape clears the buffer used to store the number keys so to allow you to use the number keys to select another window.
-q quits out of RpExpose without selecting any windows.
-Space and Return select the currently selected window.
+.B rpexpose \-\-help 
+| 
+.B \-\-version
 .br
-.SH CONFIGURING YOUR RPEXPOSERC
-RpExpose comes with an example .rpexposerc file for your convenience.
-RpExpose is configured in a similar manner to Ratpoison, you can bind, unbind keys and set various appearance options.
+.B rpexpose \-\-generate
+.BI [ file ]
+.br
+.B rpespose \-\-select
+.BI [ file ]
+.br
+.B rpexpose \-\-clean
+.SH EXAMPLES
+From
+.B rpthumb
+.br
+.B ratpoison
+\-c \*(lqfdump\*(rq |
+.br
+.B tr
+\*(lq,:\*(rq \*(lq\\n\\n\*(rq |
+.br
+.B sed
+\*(lqs/[()]//g\*(rq | 
+.br
+.B awk
+\'/window/ {print $2}\' |
+.br
+.B rpexpose
+\-\-generate \-
+
+From 
+.B rpselect
+.br
+.B ratpoison 
+\-c "windows %s:%i:%n:%t" |
+.br
+.B sed 
+\-e \*(lqs/^*:/1:/\*(rq \-e \*(lqs/^[+\-]:/0:/\*(rq |
+.br
+.B rpexpose 
+\-\-select \-
+
+Add the following lines to your
+.B .ratpoionrc
+file
+.br
+.B addhook
+switchwin exec
+.B rpthumb
+.br
+.B addhook
+quit exec
+.BR rpexpose " --clean
+.br
+.B bind
+.BI [ key ]
+.RB exec " rpselect
+.SH DESCRIPTION
+RpExpose is a graphical pager written for the Ratpoison window manager, but designed to be used with any window manager.
+.SH OPTIONS
+.TP
+.B \-h \-\-help
+Show summary of options
+.TP
+.B \-v \-\-version
+Show the version of program
+.TP
+.B \-g \-\-generate \fIfile\fP
+Generates a thumbnail image of the top level windows listed in \fIfile\fP.  \fIfile\fP should list the x window id\'s of all of the top level windows.  If \fIfile\fP is \-, then rpexpose will read from stdin.  Assuming that you are using Ratpoison, \fBrpthumb\fP (provided with \fBrpexpose\fP) is a prewritten wrapper around \fB\-\-generate\fP, and you should simply call that instead.
+.TP
+.B \-s \-\-select \fIfile\fP
+Creates a dialog box with thumbnails of all of the open windows and allows you to select one to raise.  \fIfile\fP contains a list of the current windows the syntax of which is shown below in \fBFILES\fP.  Assuming that you are using Ratpoison, \fBrpselect\fP (provided with \fBrpexpose\fP) is a prewritten wrapper around \fB\-\-select\fP, and you should simply call that instead.
+.TP
+.B \-c \-\-clean
+Cleans all of the image files in the \fI~/.rpexpose/\fP directory.  This function should be called when your window manager exits to ensure that the \fI~/.rpexpose/\fP directory does not fill up with garbage data.
+.SH FILES
+.TP
+.B \-s \-\-select \fIfile\fP
+Each line of \fIfile\fP must follow the following format: \fB[\fI1_if_selected,_0_otherwise\fP]:[\fIX_Window_ID\fP]:[\fIInternal_ID\fP]:[\fIWindow_Name]\fP
+.TP
+.B ~/.rpexposerc
+A sample rpexposerc is included along side rpexpose for your convenience.  The rpexposerc file is configured in a similar manner to Ratpoison's rc file.  The commands are described in the following section.
+.SH RPEXPOSERC FILE
+.TP
+.B left (h j) | right (l k)
+Select the left or right thumbnail
+.TP
+.B quit (q)
+Quits \fBrpexpose\fP
+.TP
+.B select (Space Return)
+Raises the current window and exits \fBrpexpose\fP
+.TP
+.B bind [\fIkey\fP] [\fIcommand\fP]
+Binds the \fIkey\fP to the given \fIcommand\fP.  Execute command every time \fIkey\fP is pressed
+.TP
+.B unbind [\fIkey\fP]
+Unbind the \fIkey\fP.  Remove the action associated with \fkey\fP
+.TP
+.B exec [\fIcommand\fP]
+Execute the supplied \fIcommand\fP
+.TP
+.B set [\fIoption\fP] [\fIvalue\fP]
+Set the internal \fIoption\fP to the supplied \fIvalue\fP.  A list of options is supplied in the following section
+.SH RPEXPOSE OPTIONS
+.TP
+.B widescreen [\fIboolean\fP]
+\fBrpexpose\fP attempts to make the selection window fit the shape of the screen as closely as possible.  If you have a wide-screen monitor, set this to be true
+.TP
+.B thumb_padding [\fIinteger\fP]
+\fBthumb_padding\fP is the space between each thumbnail, as well as the thumbnail and the edge of the window.
+.TP
+.B text_padding [\fIinteger\fP]
+\fBtext_padding\fB is the whitespace padding around each of the numbers in the top left hand corner of the thumbnails.
+.TP
+.B border_padding [\fIinteger\fP]
+\fBborder_padding\fP is the width of the border around the thumbnail of the selected window.
+.TP
+.B select_exec [\fIstring\fP]
+\fBselect_exec\fP is set to the string to be executed in order to raise a window.  The values \fI%x\fP, \fI%n\fP, and \fI%i\fP are replaced with the \fIX_Window_ID\fP, \fIWindow_Name\fP, and \fIWindow_ID\fP respectively.

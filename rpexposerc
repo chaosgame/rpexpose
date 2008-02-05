@@ -12,6 +12,7 @@ set text_padding 4
 set select_exec ratpoison -c "select %i"
 
 # Set VI keybindings, with arrow keys
+# note: this is the default
 bind h		left
 bind j		down
 bind k		up

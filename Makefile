@@ -12,10 +12,10 @@ rpexpose: ${OBJECTS}
 	${CC} ${CFLAGS} ${INCLUDE} -g -c $^
 
 install: rpexpose
-	cp rpthumb rpselect ${BINARY} ${DESTDIR}
+	cp rpthumb rpselect rpexpose ${DESTDIR}
 	@echo
 	@echo Add the following lines to your .ratpoisonrc file
-	@echo addhook exec switchwin rpthumb
+	@echo addhook switchwin exec rpthumb
 	@echo addhook quit exec rpexpose --clean
 	@echo bind \<key\> exec rpselect
 

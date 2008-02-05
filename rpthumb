@@ -3,5 +3,5 @@ sleep .1
 ratpoison -c "fdump" |
 tr ",:" "\n\n" |
 sed "s/[()]//g" | 
-awk '/window/ {print $2}' |
+awk '/window/ {print $2}' | 
 rpexpose --generate -
