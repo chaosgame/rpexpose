@@ -32,6 +32,40 @@ const int THUMB_HEIGHT=128;
 const int THUMB_PADDING=32;
 const int THUMB_OFFSET=0;
 
+typedef union _pixel pixel_t;
+
+union _pixel{
+	struct{
+		unsigned char b;
+		unsigned char g;
+		unsigned char r;
+		unsigned char a;
+	} d;
+	unsigned int b;
+};
+
+inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
+	unsigned int r=0, g=0, b=0, a=0, d=0;
+	unsigned int i,j;
+	pixel_t p;
+	x*=scale;
+	y*=scale;
+	for(i=x+scale; i>x; --i)
+		for(j=y+scale; j>y; --j){
+			p.b=XGetPixel(ximage, i, j);
+			b+=p.d.b;
+			g+=p.d.g;
+			r+=p.d.r;
+			a+=p.d.a;
+		}
+	d=scale*scale;
+	p.d.b=b/d;
+	p.d.g=g/d;
+	p.d.r=r/d;
+	p.d.a=a/d;
+	return p.b;	
+}
+
 XImage *thumbnail_generate(Window window){
 	unsigned int width, height, depth, border, offset, x, y, thumb_width, thumb_height;
 	double scale;
@@ -60,10 +94,9 @@ XImage *thumbnail_generate(Window window){
 								   thumb_width, thumb_height,
 								   THUMB_PADDING, thumb_width*4);
 
-	int center=scale/2;
 	for(x=thumb_width-1; x; --x)
 		for(y=thumb_height-1; y; --y)
-			XPutPixel(thumbnail, x,y, XGetPixel(ximage, scale*x+center, scale*y+center));
+			XPutPixel(thumbnail, x,y, thumbnail_pixel(ximage, x, y, scale));
 
 	XDestroyImage(ximage);
 	
