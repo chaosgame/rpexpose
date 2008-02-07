@@ -55,7 +55,10 @@ int load_input(){
 	
 		// Does the list exist? create it!
 		if(!i){
-			i->right=i->left=i=g.gui.thumbs=malloc(sizeof(thumbnail_t));
+			g.gui.thumbs = malloc(sizeof(thumbnail_t));
+			i = g.gui.thumbs;
+			i->left = i;
+			i->right = i->left;
 		} else {
 			thumbnail_t *tmp=malloc(sizeof(thumbnail_t));
 			i->right->left=tmp;
