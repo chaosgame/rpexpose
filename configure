@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ $# -eq 0 ]
+then
+   echo 'INCLUDE=`pkg-config --cflags x11` rpexpose.h' > Makefile
+   echo 'LIBS=`pkg-config --libs x11` -lm' >> Makefile
+else
+   if [ $1 = '--system=openbsd' ]
+   then
+      echo 'INCLUDE= `pkg-config --cflags x11` -I/usr/local/include' > Makefile
+      echo 'LIBS= `pkg-config --libs x11` -lm -largp -L/usr/local/lib' >> Makefile
+   fi
+fi
+echo "OBJECTS=rpexpose.o parse.o thumbnail.o gui.o" >> Makefile
+echo "DESTDIR=/usr/local/bin" >> Makefile
+echo "" >> Makefile
+echo "all: rpexpose" >> Makefile
+echo "" >> Makefile
+echo 'rpexpose: ${OBJECTS'} >> Makefile
+echo "\t"'${CC} ${CFLAGS} ${OBJECTS} ${LIBS} -g -o $@ ' >> Makefile
+echo "" >> Makefile
+echo ".c.o:" >> Makefile
+echo "\t"'${CC} ${CFLAGS} ${INCLUDE} -g -c $^' >> Makefile
+echo "" >> Makefile
+echo "install: rpexpose" >> Makefile
+echo "\t"'cp rpthumb rpselect rpexpose ${DESTDIR}' >> Makefile
+echo "\t@echo" >> Makefile
+echo "\t@echo Add the following lines to your .ratpoisonrc file" >> Makefile
+echo "\t@echo addhook switchwin exec rpthumb" >> Makefile
+echo "\t@echo addhook quit exec rpexpose --clean" >> Makefile
+echo "\t@echo bind \<key\> exec rpselect" >> Makefile
+echo "" >> Makefile
+echo "clean:" >> Makefile
+echo "\trm -f rpexpose *.gch *.o" >> Makefile
