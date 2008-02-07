@@ -81,7 +81,7 @@ Cleans all of the image files in the \fI~/.rpexpose/\fP directory.  This functio
 .SH FILES
 .TP
 .B \-s \-\-select \fIfile\fP
-Each line of \fIfile\fP must follow the following format: \fB[\fI1_if_selected,_0_otherwise\fP]:[\fIX_Window_ID\fP]:[\fIInternal_ID\fP]:[\fIWindow_Name]\fP
+Each line of \fIfile\fP must follow the following format: \fB[\fI1_if_selected,_0_otherwise\fP]:[\fIX_Window_ID\fP]:[\fIInternal_ID\fP]:[\fIWindow_Name\fP]\fP
 .TP
 .B ~/.rpexposerc
 A sample rpexposerc is included along side rpexpose for your convenience.  The rpexposerc file is configured in a similar manner to Ratpoison's rc file.  The commands are described in the following section.
@@ -96,11 +96,11 @@ Quits \fBrpexpose\fP
 .B select (Space Return)
 Raises the current window and exits \fBrpexpose\fP
 .TP
-.B bind [\fIkey\fP] [\fIcommand\fP]
+.B bind [\fIkey\fP] [\fIcommand\fP] 
 Binds the \fIkey\fP to the given \fIcommand\fP.  Execute command every time \fIkey\fP is pressed
 .TP
-.B unbind [\fIkey\fP]
-Unbind the \fIkey\fP.  Remove the action associated with \fkey\fP
+.B unbind [\fIkey\fP] 
+Unbind the \fIkey\fP.  Remove the action associated with \fIkey\fP
 .TP
 .B exec [\fIcommand\fP]
 Execute the supplied \fIcommand\fP

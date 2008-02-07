@@ -70,15 +70,15 @@ int load_input(){
 		if( atoi(p) )
 			g.gui.selected=i;
 		while( *p!=':' && *p ) ++p;
-		if( !*p ) exit(0);
+		assert_exit( !*p, "Parse error in input file" );
 		
 		i->xid=atoi(++p);
 		while( *p!=':' && *p ) ++p;
-		if( !*p ) exit(0);
+		assert_exit( !*p, "Parse error in input file" );
 		
 		id=++p;
 		while( *p!=':' && *p ) ++p;
-		if( !*p ) exit(0);
+		assert_exit( !*p, "Parse error in input file" );
 		*p='\0';
 		i->id=strdup(id);
 
@@ -300,14 +300,13 @@ int event_select(){
 			strcat(buffer,g.gui.selected->id);
 			break;
 		default:
-			return 1;
+			assert_exit(1,"Unknown argument to select_exec");
 		}
 	}
 
 	printf("%s\n",buffer);
 	system(buffer);
 	exit(0);
-	return 0;
 }
 
 void patricia_insert(char *id, thumbnail_t *window){

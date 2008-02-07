@@ -29,7 +29,7 @@
 
 extern const int BUFFER_SIZE;
 
-const char *argp_program_version = "rpexpose 0.1.18";
+const char *argp_program_version = "rpexpose 0.1.19";
 
 const char *argp_program_bug_address = "<nlawren2@uiuc.edu>";
 
@@ -85,19 +85,20 @@ int main(int argc, char **argv){
 
 	argp_parse(&argp, argc, argv, 0, 0, NULL);
 	
-	int error=1;
 	switch(g.action){
 	case A_CLEAR:
-		return rpexpose_clean();
+		rpexpose_clean();
+		break;
 	case A_GENERATE:
-		error=rpexpose_generate();
-		fclose(g.file.handle);
-		return error;
+		rpexpose_generate();
+		break;
 	case A_SELECT:
-		error=rpexpose_select();
-		fclose(g.file.handle);
-		return error;
+		rpexpose_select();
+		break; 
 	}
+	
+	fclose(g.file.handle);
+	return 0;
 }
 
 int rpexpose_clean(){
@@ -108,21 +109,16 @@ int rpexpose_clean(){
 
 	DIR *directory = opendir(filename);
 
-	if(directory){
-		while( ep = readdir(directory) ){
-			if( *(ep->d_name)=='.' ) continue;
-			if( !strcmp(ep->d_name, "default") ) continue;
-			sprintf(filename,"%s/.rpexpose/%s",g.file.home,ep->d_name);
-			if( remove(filename) ){
-				perror("Could not delete file");
-				closedir(directory);
-				return 1;
-			}
+	assert( !directory, "Couldn't open $HOME/.rpexpose/\n");
+	while( ep = readdir(directory) ){
+		if( *(ep->d_name)=='.' ) continue;
+		if( !strcmp(ep->d_name, "default") ) continue;
+		sprintf(filename,"%s/.rpexpose/%s",g.file.home,ep->d_name);
+		if( remove(filename) ){
+			error("Could not delete file");
+			closedir(directory);
+			return 1;
 		}
-	}
-	else{
-		perror("Couldn't open $HOME/.rpexpose/\n");
-		return 1;
 	}
 	
 	closedir(directory);
@@ -140,10 +136,7 @@ int rpexpose_generate(){
 
 	DIR *directory = opendir(filename);
 	if(!directory){
-		if( mkdir(filename,0755) ){
-			perror("Could not create directory");
-			exit(1);
-		}
+		assert( mkdir(filename,0755), "Could not create directory" );
 	}else{
 		closedir(directory);
 	}

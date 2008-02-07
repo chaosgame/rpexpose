@@ -136,7 +136,7 @@ int parse_command(char *command){
 			return system(command);
 	case S_SHUTDOWN:
 	default:
-			fprintf(stderr,"Bad Command\n");
+			error("Bad Command in rc file");
 			return 1;
 	}
 }
@@ -145,7 +145,7 @@ int parse_set(char *command){
 	char *arguments=parse_split(command);
 
 	if(!arguments){
-		perror("set called with no arguments in rc file");
+		error("Set called with too few arguments in rc file");
 		return 1;
 	}
 
@@ -175,7 +175,7 @@ int parse_set(char *command){
 		return 0;
 	}
 
-	fprintf(stderr,"Unknown variable\n");
+	error("Set called with unknown argument in rc file");
 	return 1;
 }
 
@@ -183,7 +183,7 @@ int parse_bind(char *command, int unbind){
 	char *arguments=parse_split(command);
 	
 	if(!arguments){
-		perror("bind called with no options in rc file");
+		error("Bind called with too few options in rc file");
 		return 1;
 	}
 
@@ -198,7 +198,7 @@ int parse_bind(char *command, int unbind){
 
 int parse_truth(char *arguments){
 	if(parse_split(arguments)){
-		perror("Unknown boolean value in rc file");
+		error("Unknown boolean value in rc file");
 		return -1;
 	}
 	if( !strcmp(arguments,"true") )
@@ -214,7 +214,7 @@ int parse_truth(char *arguments){
 	if( !strcmp(arguments,"0") )
 		return 0;
 	
-	perror("Unknown boolean value in rc file");
+	error("Unknown boolean value in rc file");
 	return -1;
 }
 

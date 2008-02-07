@@ -40,6 +40,8 @@
 #include <X11/Xos.h>
 #include <X11/xpm.h>
 
+#include "assert.h"
+
 typedef enum {A_UNKNOWN=0, A_CLEAR, A_GENERATE, A_SELECT} action_t;
 typedef enum {S_STARTUP, S_RUNNING, S_SHUTDOWN} status_t;
 
