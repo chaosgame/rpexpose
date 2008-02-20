@@ -1,4 +1,4 @@
-INCLUDE=`pkg-config --cflags x11` rpexpose.h
+INCLUDE=`pkg-config --cflags x11` 
 LIBS=`pkg-config --libs x11` -lm
 OBJECTS=rpexpose.o parse.o thumbnail.o gui.o assert.o
 DESTDIR=/usr/local/bin
@@ -8,7 +8,7 @@ all: rpexpose
 rpexpose: ${OBJECTS}
 	 ${CC} ${CFLAGS} ${OBJECTS} ${LIBS} -g -o $@ 
 
-.c.o:
+.c.o: rpexpose.h
 	 ${CC} ${CFLAGS} ${INCLUDE} -g -c $^
 
 install: rpexpose

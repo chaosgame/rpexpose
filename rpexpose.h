@@ -42,6 +42,8 @@
 
 #include "assert.h"
 
+#define INTERPOLATE
+
 typedef enum {A_UNKNOWN=0, A_CLEAR, A_GENERATE, A_SELECT} action_t;
 typedef enum {S_STARTUP, S_RUNNING, S_SHUTDOWN} status_t;
 

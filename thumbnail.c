@@ -44,12 +44,17 @@ union _pixel{
 	unsigned int b;
 };
 
+#if defined(INTERPOLATE)
+
 inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
 	unsigned int r=0, g=0, b=0, a=0, d=0;
 	unsigned int i,j;
 	pixel_t p;
 	x*=scale;
 	y*=scale;
+	x+=scale/4;
+	y+=scale/4;
+	scale=scale*3/4;
 	for(i=x+scale; i>x; --i)
 		for(j=y+scale; j>y; --j){
 			p.b=XGetPixel(ximage, i, j);
@@ -65,6 +70,66 @@ inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
 	p.d.a=a/d;
 	return p.b;	
 }
+
+#elif defined(FIVE_POINT)
+
+inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
+	unsigned int r=0, g=0, b=0, a=0;
+	pixel_t p;
+	x*=scale;
+	y*=scale;
+
+	p.b=XGetPixel(ximage, x, y);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale/2, y+scale/2);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.d.b=b/5;
+	p.d.g=g/5;
+	p.d.r=r/5;
+	p.d.a=a/5;
+	return p.b;	
+}
+
+#elif defined(CORNER)
+
+inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
+	return XGetPixel(ximage, x, y);
+}
+
+#else
+
+inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
+	return XGetPixel(ximage, scale*x, scale*y);
+}
+
+
+#endif
 
 XImage *thumbnail_generate(Window window){
 	unsigned int width, height, depth, border, offset, x, y, thumb_width, thumb_height;

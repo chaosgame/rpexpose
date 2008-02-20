@@ -4,7 +4,7 @@ TAB=`echo "_" | tr "_" "\t"`
 
 if [ $# -eq 0 ]
 then
-   echo 'INCLUDE=`pkg-config --cflags x11` rpexpose.h' > Makefile
+   echo 'INCLUDE=`pkg-config --cflags x11` ' > Makefile
    echo 'LIBS=`pkg-config --libs x11` -lm' >> Makefile
 else
    if [ $1 = '--system=openbsd' ]
@@ -21,7 +21,7 @@ echo "" >> Makefile
 echo 'rpexpose: ${OBJECTS}' >> Makefile
 echo "${TAB}" '${CC} ${CFLAGS} ${OBJECTS} ${LIBS} -g -o $@ ' >> Makefile
 echo "" >> Makefile
-echo ".c.o:" >> Makefile
+echo ".c.o: rpexpose.h" >> Makefile
 echo "${TAB}" '${CC} ${CFLAGS} ${INCLUDE} -g -c $^' >> Makefile
 echo "" >> Makefile
 echo "install: rpexpose" >> Makefile

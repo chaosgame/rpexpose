@@ -44,6 +44,7 @@ int load_input(){
 	thumbnail_t *i=NULL;
 
 	g.gui.num_thumbs=0;
+	g.gui.selected=NULL;
 	g.p.selected=&g.p.top;
 
 	for(;;){
@@ -98,6 +99,9 @@ int load_input(){
 			i->width=i->image->width;
 			i->height=i->image->height;
 		}
+
+		if( !g.gui.selected )
+			g.gui.selected=i;
 
 		patricia_insert(i->id,i);
 

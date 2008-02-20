@@ -4,4 +4,5 @@ ratpoison -c "fdump" |
 tr ",:" "\n\n" |
 sed "s/[()]//g" |
 awk '/window/ {print $2}' |
+grep -v "^0$" |
 rpexpose --generate -
