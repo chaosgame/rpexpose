@@ -71,6 +71,75 @@ inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
 	return p.b;	
 }
 
+#elif defined(NINE_POINT)
+
+inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
+	unsigned int r=0, g=0, b=0, a=0;
+	pixel_t p;
+	x*=scale;
+	y*=scale;
+	int scale2=scale/2;
+
+	p.b=XGetPixel(ximage, x+scale2, y+scale2);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale2, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y+scale2);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale2, y+scale2);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x, y);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.d.b=b/9;
+	p.d.g=g/9;
+	p.d.r=r/9;
+	p.d.a=a/9;
+	return p.b;	
+}
 #elif defined(FIVE_POINT)
 
 inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
@@ -104,6 +173,52 @@ inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
 	a+=p.d.a;
 
 	p.b=XGetPixel(ximage, x+scale/2, y+scale/2);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.d.b=b/5;
+	p.d.g=g/5;
+	p.d.r=r/5;
+	p.d.a=a/5;
+	return p.b;	
+}
+
+#elif defined(FIVE_POINT_2)
+
+inline long thumbnail_pixel(XImage *ximage, int x, int y, int scale){
+	unsigned int r=0, g=0, b=0, a=0;
+	pixel_t p;
+	x*=scale;
+	y*=scale;
+	int scale2=scale/2;
+
+	p.b=XGetPixel(ximage, x+scale2, y+scale2);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale2, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y+scale2);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale, y+scale);
+	b+=p.d.b;
+	g+=p.d.g;
+	r+=p.d.r;
+	a+=p.d.a;
+
+	p.b=XGetPixel(ximage, x+scale2, y+scale2);
 	b+=p.d.b;
 	g+=p.d.g;
 	r+=p.d.r;
