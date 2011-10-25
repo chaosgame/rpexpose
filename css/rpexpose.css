@@ -1,0 +1,31 @@
+body{
+	background:		#404070;
+	min-width:		100px;
+	min-height:		100px;
+	margin:			10% 10% 10% 10%;
+}
+
+*.block{
+	padding:			25px 25px 25px 25px;
+	margin:			25px 0px 25px 0px;
+	border-left:	2px solid #000000;
+	border-top:		2px solid #000000;
+	border-bottom:	1px solid #B0B0B0;
+	border-right:	1px solid #B0B0B0;
+	background:		white;
+}
+
+h1{
+	text-align:		center;
+}
+
+*.img-block{
+	padding:			25px 25px 25px 25px;
+	text-align:		center;
+}
+
+*.code-block{
+	padding:			10px 10px 10px 10px;
+	border:			1px solid #000000;
+}
+

@@ -1,0 +1,1642 @@
+<!-- Creator     : groff version 1.19.2 -->
+<!-- CreationDate: Thu Feb 14 20:45:27 2008 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<link rel="stylesheet" type="text/css" href="/css/rpexpose.css">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p     { margin-top: 0; margin-bottom: 0; }
+       pre   { margin-top: 0; margin-bottom: 0; }
+       table { margin-top: 0; margin-bottom: 0; }
+</style>
+<title>RATPOISON</title>
+
+</head>
+<body>
+
+<div class="block">
+<h1 align=center>RATPOISON</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#KEY BINDINGS">KEY BINDINGS</a><br>
+<a href="#COMMANDS AND DEFAULT ALIASES">COMMANDS AND DEFAULT ALIASES</a><br>
+<a href="#VARIABLES">VARIABLES</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+
+<hr>
+
+
+<a name="NAME"></a>
+<h2>NAME</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">ratpoison
+&minus; window manager without mouse dependency</p>
+
+<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>ratpoison
+&minus;&minus;help</b> | <b>&minus;&minus;version <br>
+ratpoison</b> [<b>&minus;d</b> <i>dpy</i>] [<b>&minus;s</b>
+<i>num</i>] [<b>&minus;f</b> <i>file</i>] <b><br>
+ratpoison</b> [<b>&minus;d</b> <i>dpy</i>] [<b>&minus;s</b>
+<i>num</i>] [<b>&minus;i</b>] <b>&minus;c</b> <i>command</i>
+[<b>&minus;c</b> <i>command</i> ... ]</p>
+
+<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Ratpoison is a
+Window Manager without fat library dependencies, fancy
+graphics or rat dependence.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The screen can
+be split into non-overlapping frames. All windows are kept
+maximized inside their frames.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All interaction
+with the window manager is done through keystrokes.
+ratpoison has a prefix map to minimize key clobbering.</p>
+
+<a name="OPTIONS"></a>
+<h2>OPTIONS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;h,
+&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">Show summary of options.</p>
+
+<p style="margin-left:11%;"><b>&minus;v,
+&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">Show version of program.</p>
+
+<p style="margin-left:11%;"><b>&minus;d,
+&minus;&minus;display</b> <i>display</i></p>
+
+<p style="margin-left:22%;">Set the X display to use or
+send commands to.</p>
+
+<p style="margin-left:11%;"><b>&minus;s,
+&minus;&minus;screen</b> <i>number</i></p>
+
+<p style="margin-left:22%;">Only use the specified
+screen.</p>
+
+<p style="margin-left:11%;"><b>&minus;f,
+&minus;&minus;file</b> <i>filename</i></p>
+
+<p style="margin-left:22%;">Specify an alternate
+configuration file. If this is not given, ratpoison will try
+<b>$HOME/.ratpoisonrc</b> and if that does not exist
+<b>/etc/ratpoisonrc</b> and execute each command when
+starting up.</p>
+
+<p style="margin-left:11%;"><b>&minus;i,
+&minus;&minus;interactive</b></p>
+
+<p style="margin-left:22%;">Execute commands given with
+<b>&minus;c</b> or <b>&minus;&minus;command</b> in
+interactive mode. That means it will behave exactly as if
+called with <b>C&minus;t :</b> like prompting for missing
+arguments and things like that.</p>
+
+<p style="margin-left:11%;"><b>&minus;c,
+&minus;&minus;command</b></p>
+
+<p style="margin-left:22%;">Send ratpoison a command. There
+must be a ratpoison instance running as window manager for
+the given display/screen for this to work. Do not forget to
+quote the command if it contains spaces. For example:
+<b><br>
+ratpoison &minus;c &quot;echo hallo world&quot;</b></p>
+
+<a name="KEY BINDINGS"></a>
+<h2>KEY BINDINGS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">To avoid
+conflicts with other programs, all default ratpoison key
+bindings start with an escape key, per default
+<b>C&minus;t</b> (read Control&minus;t). Some important
+default key bindings:</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>C&minus;t
+q</b> Quit ratpoison <b><br>
+C&minus;t ?</b> Show key bindings <b><br>
+C&minus;t c</b> Start an X terminal <b><br>
+C&minus;t n</b> Switch to next window <b><br>
+C&minus;t p</b> Switch to previous window <b><br>
+C&minus;t
+1</b>|<b>2</b>|<b>3</b>|<b>4</b>|<b>5</b>|<b>6</b>|<b>7</b>|<b>8</b>|<b>9</b>
+Switch to window number 1|2|... <b><br>
+C&minus;t k</b> Close the current window <b><br>
+C&minus;t K</b> XKill the current application <b><br>
+C&minus;t s</b>|<b>S</b> Split the current frame into two
+vertical|horizontal ones <b><br>
+C&minus;t
+Tab</b>|<b>Left</b>|<b>Up</b>|<b>Right</b>|<b>Down</b>
+Switch to the next|left|top|right|bottom frame. <b><br>
+C&minus;t Q</b> Make the current frame the only one <b><br>
+C&minus;t :</b> Execute a ratpoison command</p>
+
+<p style="margin-left:11%; margin-top: 1em">Further default
+key bindings can be found in parentheses after the commands
+in the next section:</p>
+
+<a name="COMMANDS AND DEFAULT ALIASES"></a>
+<h2>COMMANDS AND DEFAULT ALIASES</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>abort</b>
+(<b>C&minus;t C&minus;g</b>)</p>
+
+<p style="margin-left:22%;">Do nothing and that
+successfully. (Useful if you pressed <b>C&minus;t</b> in
+error).</p>
+
+<p style="margin-left:11%;"><b>addhook</b> <i>event
+command</i></p>
+
+<p style="margin-left:22%;">Add a hook: Run command
+<i>command</i> whenever <i>event</i> is called. Possible
+events are: <b><br>
+deletewindow</b>Run after a window is withdrawn.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top"><b>key</b></p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top">Run whenever a top level key is pressed.
+(by default <b>C&minus;t</b>)</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top"><b>quit</b></p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top">Run before exiting ratpoison.</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top"><b>restart</b></p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top">Run before restarting ratpoison.</p></td>
+</table>
+
+<p style="margin-left:22%;"><b>switchframe</b>Run after a
+frame actually switched, but before the window in it is
+focused. <b><br>
+switchgroup</b>Run after selecting a new group.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top"><b>switchwin</b></p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-7%"></td>
+<td width="85%">
+
+
+<p valign="top">Run after a new window is selected. (With
+dedication, it may already be inactive again, if it was put
+into another frame)</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>alias</b> <i>alias
+command</i></p>
+
+<p style="margin-left:22%;">Add <i>alias</i> as new way to
+call <i>command</i>.</p>
+
+<p style="margin-left:11%;"><b>bind</b> <i>key
+command</i></p>
+
+<p style="margin-left:22%;">alias for &quot;<b>definekey
+root</b> <i>key command</i>&quot;</p>
+
+<p style="margin-left:11%;"><b>banish</b> (<b>C&minus;t
+b</b>)</p>
+
+<p style="margin-left:22%;">Banish the rat cursor to the
+lower right corner of the screen.</p>
+
+<p style="margin-left:11%;"><b>chdir</b>
+[<i>directory</i>]</p>
+
+<p style="margin-left:22%;">If the optional argument is
+given, change the current directory of ratpoison to
+<i>directory</i>. If nothing is given, change it to the
+value of the environment variable &quot;HOME&quot;.</p>
+
+<p style="margin-left:11%;"><b>clrunmanaged</b></p>
+
+<p style="margin-left:22%;">Clears the unmanaged window
+list.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em" valign="top"><b>cnext</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Like <b>next</b>
+but switch to the next window with another resource class
+than the current one. (That means the next window belonging
+to another type of application</p></td>
+</table>
+
+<p style="margin-left:22%;">than the current one.)</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em" valign="top"><b>cprev</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Like <b>prev</b>
+but switch to the previous window with another resource
+class than the current one. (That means the previous window
+belonging to another type of application</p></td>
+</table>
+
+<p style="margin-left:22%;">than the current one.)</p>
+
+<p style="margin-left:11%;"><b>colon</b>
+<i>ratpoison&minus;command</i> (<b>C&minus;t :</b>)</p>
+
+<p style="margin-left:22%;">Execute
+<i>ratpoison&minus;command</i> interactively. (i.e. ask for
+possible missing arguments.)</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>compat</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Add aliases for the
+new <b>set</b> commands starting with <b>def</b> to support
+older scripts.</p></td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>cother</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Like <b>other</b>
+but switch to the window of the current group that was last
+accessed and has an other resource class but is not
+currently visible.</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>curframe</b> (<b>C&minus;t
+F</b>)</p>
+
+<p style="margin-left:22%;">Show a bar marking the current
+frame.</p>
+
+<p style="margin-left:11%;"><b>definekey</b> <i>keymap key
+command</i></p>
+
+<p style="margin-left:22%;">Add a new key binding in
+<i>keymap</i> for <i>key</i> to execute <i>command</i>.
+Default keymaps are <b>top</b> normally only containing
+<b>C&minus;t</b>, which reads a key from <b>root</b>,
+containing all the normal commands.</p>
+
+<p style="margin-left:22%; margin-top: 1em">Note that you
+have to describe &quot;:&quot; by &quot;colon&quot;,
+&quot;!&quot; by &quot;exclam&quot; and so on. If you cannot
+guess a name of a key, try either <b>C&minus;t</b>
+<i>key</i> and look at the error message, or try
+<b>:describekey root</b> and pressing the key.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>def...</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">When <b>compat</b>
+was called there are some aliases starting with <i>def</i>,
+which alias the new form with <b>set</b>. I.e. instead of
+<b>defresizeunit</b> better use the new <b>set
+resizeunit</b> and so on...</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>dedicate</b>
+[<b>0</b>|<b>1</b>]</p>
+
+<p style="margin-left:22%;">Consider the current frame
+dedicated/chaste (<b>1</b>) or promiscuous (<b>0</b>). <br>
+A dedicated frame will not accept new windows. When new
+windows are to be focused, they will be opened in a
+non-dedicated frame instead. <br>
+If no argument is given, toggle the current dedicateness. By
+default no windows are dedicated.</p>
+
+<p style="margin-left:11%;"><b>delete</b> (<b>C&minus;t
+k</b>)</p>
+
+<p style="margin-left:22%;">Close the current window.</p>
+
+<p style="margin-left:11%;"><b>delkmap</b>
+<i>keymap</i></p>
+
+<p style="margin-left:22%;">Deletes the keymap named
+<i>keymap</i>, that was generated with <b>newkmap</b>. The
+keymaps <b>top</b> (or whatever was specified by <b>set
+topkmap</b>) and <b>root</b> cannot be deleted.</p>
+
+<p style="margin-left:11%;"><b>describekey</b>
+<i>keymap</i></p>
+
+<p style="margin-left:22%;">Grab the next key. Similar to
+<b>readkey</b>, describekey shows only the command in
+<i>keymap</i>, that would be executed by <b>readkey</b>.</p>
+
+<p style="margin-left:11%;"><b>echo</b> <i>text</i></p>
+
+<p style="margin-left:22%;">Show <i>text</i> as ratpoison
+message.</p>
+
+<p style="margin-left:11%;"><b>escape</b> <i>key</i></p>
+
+<p style="margin-left:22%;">Update the default escape key
+to <i>key</i>. <br>
+Strictly speaking it updates the the <b>readkey root</b>
+command in the keymap <b>top</b> to <i>key</i>, the
+<b>other</b> binding in <b>root</b> to <i>key</i>, and
+<b>meta</b> binding in <b>root</b> to <i>key</i> without
+modifiers or <b>C&minus;</b><i>key</i> if <i>key</i> has no
+modifiers. (If <b>set topkmap</b> was called with an
+argument other than <b>top</b> that will be used instead of
+<b>top</b>.)</p>
+
+<p style="margin-left:11%;"><b>exchangedown</b>
+(<b>C&minus;t C&minus;Down</b>)</p>
+
+<p style="margin-left:22%;">Exchange the window in the
+current frame with the window in the frame below the current
+frame.</p>
+
+<p style="margin-left:11%;"><b>exchangeleft</b>
+(<b>C&minus;t C&minus;Left</b>)</p>
+
+<p style="margin-left:22%;">Exchange the window in the
+current frame with the window in the frame left of the
+current frame.</p>
+
+<p style="margin-left:11%;"><b>exchangeright</b>
+(<b>C&minus;t C&minus;Right</b>)</p>
+
+<p style="margin-left:22%;">Exchange the window in the
+current frame with the window in the frame right of the
+current frame.</p>
+
+<p style="margin-left:11%;"><b>exchangeup</b> (<b>C&minus;t
+C&minus;Up</b>)</p>
+
+<p style="margin-left:22%;">Exchange the window in the
+current frame with the window in the frame above the current
+frame.</p>
+
+<p style="margin-left:11%;"><b>exec</b>
+<i>shell&minus;command</i> (<b>C&minus;t !</b>)</p>
+
+<p style="margin-left:22%;">Spawn a shell executing
+<i>shell&minus;command</i>.</p>
+
+<p style="margin-left:11%;"><b>execa</b>
+<i>shell&minus;command</i></p>
+
+<p style="margin-left:22%;">Spawn a shell executing
+<i>shell&minus;command</i>, without remembering the current
+frame, so that _NET_WM_PID declaring programs will be placed
+into the frame active when they open a window instead of the
+frame active when ratpoison gets this command.</p>
+
+<p style="margin-left:11%;"><b>execf</b> <i>frame
+shell&minus;command</i></p>
+
+<p style="margin-left:22%;">Spawn a shell executing
+<i>shell&minus;command</i>, showing _NET_WM_PID supporting
+programs in the given frame instead of the frame selected
+when this program is run.</p>
+
+<p style="margin-left:11%;"><b>fdump</b>
+[<i>screenno</i>]</p>
+
+<p style="margin-left:22%;">Output the defining data for
+all frames of the current screen, or for screen number
+<i>screenno</i> if this is specified.</p>
+
+<p style="margin-left:11%;"><b>focus</b> (<b>C&minus;t
+Tab</b>)</p>
+
+<p style="margin-left:22%;">Focus the next frame.</p>
+
+<p style="margin-left:11%;"><b>focuslast</b></p>
+
+<p style="margin-left:22%;">Switch to the last selected
+focus.</p>
+
+<p style="margin-left:11%;"><b>focusleft</b> (<b>C&minus;t
+Left</b>)</p>
+
+<p style="margin-left:22%;">Switch to the frame to the left
+of the current one.</p>
+
+<p style="margin-left:11%;"><b>focusdown</b> (<b>C&minus;t
+Down</b>)</p>
+
+<p style="margin-left:22%;">Switch to the frame beneath the
+current one.</p>
+
+<p style="margin-left:11%;"><b>focusright</b> (<b>C&minus;t
+Right</b>)</p>
+
+<p style="margin-left:22%;">Switch to the frame to the
+right of the current one.</p>
+
+<p style="margin-left:11%;"><b>focusprev</b></p>
+
+<p style="margin-left:22%;">Focus the previous frame.</p>
+
+<p style="margin-left:11%;"><b>focusup</b> (<b>C&minus;t
+Up</b>)</p>
+
+<p style="margin-left:22%;">Switch to the frame above the
+current one.</p>
+
+<p style="margin-left:11%;"><b>frestore</b>
+<i>frames</i></p>
+
+<p style="margin-left:22%;">Replace the current frames with
+the ones specified in <i>frames</i> in the format as
+generated by <b>fdump</b>.</p>
+
+<p style="margin-left:11%;"><b>fselect</b> [<i>frameno</i>]
+(<b>C&minus;t f</b>)</p>
+
+<p style="margin-left:22%;">If an argument is supplied,
+switch to a frame given by number <i>frameno</i>.</p>
+
+<p style="margin-left:22%; margin-top: 1em">If no argument
+is given, show a frame selector in each frame and wait for a
+key to be pressed. If the key matches an existing frame
+selector, this frame gets focused.</p>
+
+<p style="margin-left:22%; margin-top: 1em">Frame selectors
+are by default the numbers starting with zero, but they can
+be changed by <b>set</b>ing <b>framesels</b>.</p>
+
+<p style="margin-left:11%;"><b>gdelete</b>
+[<i>group</i>]</p>
+
+<p style="margin-left:22%;">If the optional argument
+<i>group</i> is supplied, delete group <i>group</i>.
+Otherwise delete the current group. If the last group is
+deleted, a new group with name <b>default</b> is created.
+The group has to be empty, otherwise it cannot be
+deleted.</p>
+
+<p style="margin-left:11%;"><b>getenv</b>
+<i>variable</i></p>
+
+<p style="margin-left:22%;">Output the value of the
+environment variable <i>variable</i>.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>getsel</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Paste the current X
+Selection into the current window.</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>gmerge</b> <i>group</i></p>
+
+<p style="margin-left:22%;">Move all windows from group
+<i>group</i> into the current group.</p>
+
+<p style="margin-left:11%;"><b>gmove</b> <i>group</i></p>
+
+<p style="margin-left:22%;">Move the current window into
+group <i>group</i>.</p>
+
+<p style="margin-left:11%;"><b>gnew</b> <i>group</i></p>
+
+<p style="margin-left:22%;">Create a new group with name
+<i>group</i> and select it. Most window commands only see
+(and thus select, consider next, previous or last) windows
+within the group active when they are issued.</p>
+
+<p style="margin-left:11%;"><b>gnewbg</b> <i>group</i></p>
+
+<p style="margin-left:22%;">Create a new group named
+<i>groupf</i>, but do not select it.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em" valign="top"><b>gnext</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Select the next
+group. Most window commands only see windows in the
+effective group.</p></td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em" valign="top"><b>gprev</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Select the prior
+group. Most window commands only see windows in the
+effective group.</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>gravity</b>
+[<b>nw</b>|<b>w</b>|<b>sw</b>|<b>n</b>|<b>c</b>|<b>s</b>|<b>ne</b>|<b>e</b>|<b>se</b>]</p>
+
+<p style="margin-left:22%;">Change how in its frame the
+current window is aligned.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>groups</b></p></td>
+<td width="2%"></td>
+<td width="70%">
+
+
+<p style="margin-top: 1em" valign="top">Output a list of
+all groups with their number.</p></td>
+<td width="8%">
+</td>
+</table>
+
+<p style="margin-left:11%;"><b>gselect</b> <i>group</i></p>
+
+<p style="margin-left:22%;">Select the group names
+<i>group</i>.</p>
+
+<p style="margin-left:11%;"><b>help</b> [<i>keymap</i>]</p>
+
+<p style="margin-left:22%;">If the optional parameter
+<i>keymap</i> is given, list all keybindings in this keymap,
+otherwise list all key bindings in keymap <i>root</i>.</p>
+
+<p style="margin-left:11%;"><b>hsplit</b>
+[<i>l</i><b>/</b><i>p</i>|<i>pixels from
+left</i>|<b>&minus;</b><i>pixels from right</i>]
+(<b>C&minus;t S</b>)</p>
+
+<p style="margin-left:22%;">Split the current frame into
+left frame and a right frame. If no parameter is given,
+split in halves. If two numbers separated by a
+slash&nbsp;(&quot;<b>/</b>&quot;) are given, the left one is
+<i>l</i> times the <i>p</i>th part and the right one
+(<i>p</i>&minus;<i>l</i>) times the <i>p</i>th part of the
+prior width. Otherwise the right one is <i>pixels from
+right</i> wide or the left one <i>pixels from left</i> wide,
+depending whether there is <b>&minus;</b> in front of the
+number or not.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em" valign="top"><b>inext</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Like <b>next</b>
+but switch to the next window with the same resource class
+as the current one. (That means the next window belonging to
+the same application</p></td>
+</table>
+
+<p style="margin-left:22%;">as the current one.)</p>
+
+<p style="margin-left:11%;"><b>info</b> (<b>C&minus;t
+i</b>)</p>
+
+<p style="margin-left:22%;">Output the current the width,
+height, window number and window name of the current window.
+(What name means is chosen by
+&quot;<b>set&nbsp;winname</b>&quot;.)</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em" valign="top"><b>iprev</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Like <b>prev</b>
+but switch to the previous window with the same resource
+class as the current one. (That means the previous window
+belonging to the same application</p></td>
+</table>
+
+<p style="margin-left:22%;">as the current one.)</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>iother</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Like <b>other</b>
+but switch to the window of the current group that was last
+accessed and has the same resource class but is not
+currently visible.</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>kill</b> (<b>C&minus;t
+K</b>)</p>
+
+<p style="margin-left:22%;">Close the X&minus;connection of
+the X&minus;client responsible for the current window.</p>
+
+<p style="margin-left:11%;"><b>lastmsg</b> (<b>C&minus;t
+m</b>)</p>
+
+<p style="margin-left:22%;">Reshow the last message.</p>
+
+<p style="margin-left:11%;"><b>license</b> (<b>C&minus;t
+V</b>)</p>
+
+<p style="margin-left:22%;">Show ratpoison&rsquo;s
+license.</p>
+
+<p style="margin-left:11%;"><b>link</b> <i>key</i>
+[<i>keymap</i>]</p>
+
+<p style="margin-left:22%;">Do what <i>key</i> is bound to
+in the keymap <i>keymap</i> if supplied. Otherwise what
+<i>key</i> is bound to in keymap <b>root</b>.</p>
+
+<p style="margin-left:11%;"><b>listhook</b>
+<i>event</i></p>
+
+<p style="margin-left:22%;">List all commands specified
+with <b>addhook</b> to be executed when even <i>event</i>
+occurs.</p>
+
+<p style="margin-left:11%;"><b>meta</b> [<i>key</i>]
+(<b>C&minus;t t</b>)</p>
+
+<p style="margin-left:22%;">Send the escape key (that which
+normally is <b>C&minus;t</b>) to the current window. If a
+<i>key</i> is specified, this is sent instead. Note that
+some applications by default ignore the synthetic key that
+is sent using this command as it is considered a security
+hole. xterm is one such application.</p>
+
+<p style="margin-left:11%;"><b>msgwait</b>
+[<i>seconds</i>]</p>
+
+<p style="margin-left:22%;">Set the duration the message
+window is shown. If <i>seconds</i> is zero, wait
+infinitely.</p>
+
+<p style="margin-left:11%;"><b>newkmap</b>
+<i>keymap</i></p>
+
+<p style="margin-left:22%;">Generate a new keymap names
+<i>keymap</i>. This keymap can be used to add new
+key&minus;command mapping to it with <b>definekey</b> and
+can be called with <b>readkey</b>.</p>
+
+<p style="margin-left:11%;"><b>newwm</b> <i>new window
+manager</i></p>
+
+<p style="margin-left:22%;">Quit ratpoison and execute
+<i>new window manager</i> instead.</p>
+
+<p style="margin-left:11%;"><b>next</b> (<b>C&minus;t
+Return</b>|<b>C&minus;t n</b>|<b>C&minus;t space</b>)</p>
+
+<p style="margin-left:22%;">Switch to the next window in
+the current group.</p>
+
+<p style="margin-left:11%;"><b>nextscreen</b></p>
+
+<p style="margin-left:22%;">Switch to the next screen. (If
+you have multiple physical ones.)</p>
+
+<p style="margin-left:11%;"><b>number</b> <i>new</i>
+[<i>old</i>]</p>
+
+<p style="margin-left:22%;">Give the number <i>new</i> to
+the window with the number <i>old</i> or the current
+window.</p>
+
+<p style="margin-left:11%;"><b>only</b> (<b>C&minus;t
+Q</b>)</p>
+
+<p style="margin-left:22%;">Remove all frames on the
+current screen except the current frame and maximise this
+one to the size of the whole screen.</p>
+
+<p style="margin-left:11%;"><b>other</b> (<b>C&minus;t
+C&minus;t</b>)</p>
+
+<p style="margin-left:22%;">Switch to the window of the
+current group that was last accessed but is not currently
+visible.</p>
+
+<p style="margin-left:11%;"><b>prev</b> (<b>C&minus;t
+p</b>)</p>
+
+<p style="margin-left:22%;">Switch to the previous window
+in the current group.</p>
+
+<p style="margin-left:11%;"><b>prevscreen</b></p>
+
+<p style="margin-left:22%;">Switch to the previous screen.
+(If you have multiple physical ones.)</p>
+
+<p style="margin-left:11%;"><b>prompt</b>
+[<i>prompt</i>]</p>
+
+<p style="margin-left:22%;">Ratpoison will ask the user for
+input, showing <i>prompt</i> (or a single colon, if no
+argument is given) and output the input the user has made.
+<br>
+Note that this command probably does not make much sense in
+interactive mode.</p>
+
+<p style="margin-left:11%;"><b>putsel</b>
+<i>x&minus;selection</i></p>
+
+<p style="margin-left:22%;">Replace the X selection with
+the text <i>x&minus;selection</i>. It can be inserted into
+the current window with <b>getsel</b>.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p style="margin-top: 1em" valign="top"><b>quit</b></p></td>
+<td width="5%"></td>
+<td width="23%">
+
+
+<p style="margin-top: 1em" valign="top">Quit ratpoison.</p></td>
+<td width="55%">
+</td>
+</table>
+
+<p style="margin-left:11%;"><b>ratwarp</b> <i>x y</i></p>
+
+<p style="margin-left:22%;">Move the rat cursor to the
+position (<i>x</i>,<i>y</i>).</p>
+
+<p style="margin-left:11%;"><b>ratrelwarp</b> <i>deltax
+deltay</i></p>
+
+<p style="margin-left:22%;">Move the rat cursor to
+(<i>deltax</i>,<i>deltay</i>), relative to the current
+position.</p>
+
+<p style="margin-left:11%;"><b>ratclick</b>
+[<i>button</i>]</p>
+
+<p style="margin-left:22%;">Simulate a rat click with
+<i>button</i> (button 1=left button if none given).</p>
+
+<p style="margin-left:11%;"><b>rathold up</b>|<b>down</b>
+[<i>button</i>]</p>
+
+<p style="margin-left:22%;">Simulate pressing|releasing rat
+button <i>button</i> (1=left button if none given).</p>
+
+<p style="margin-left:11%;"><b>readkey</b>
+<i>keymap</i></p>
+
+<p style="margin-left:22%;">Grab the next key pressed, and
+execute the command associated to this key in <i>keymap</i>.
+To show it is waiting for a key, ratpoison will change the
+rat cursor to a square if <b>waitcursor</b> is set.</p>
+
+<p style="margin-left:22%; margin-top: 1em">This command is
+perhaps best described with its usage in the default
+configuration: By pressing <b>C&minus;t</b>, which is the
+only key in the keymap <b>top</b>, the command
+&quot;<b>readkey root</b>&quot; is executed. The next key
+then executes the command in keymap <b>root</b> belonging to
+this command.</p>
+
+<p style="margin-left:11%;"><b>redisplay</b> (<b>C&minus;t
+l</b>)</p>
+
+<p style="margin-left:22%;">Extend the current window to
+the whole size of its current frame and redisplay it.
+(Useful to redisplay normal windows or bring transient
+windows to the full size of the frame as only normal windows
+are maximized by ratpoison)</p>
+
+<p style="margin-left:11%;"><b>redo</b> (<b>C&minus;t
+U</b>)</p>
+
+<p style="margin-left:22%;">Revert the last <i>undo</i> of
+frame changes.</p>
+
+<p style="margin-left:11%;"><b>remhook</b> <i>event
+command</i></p>
+
+<p style="margin-left:22%;">Remove command <i>command</i>
+from the list of commands to be called when event
+<i>event</i> is hit. (The command has to specified, as an
+event can have multiple commands attached to it.) Use
+&quot;<b>listhook</b> <i>hook</i>&quot; to get a list of all
+attached commands.</p>
+
+<p style="margin-left:11%;"><b>remove</b> (<b>C&minus;t
+R</b>)</p>
+
+<p style="margin-left:22%;">Remove the current frame and
+extend some frames around to fill the remaining gap.</p>
+
+<p style="margin-left:11%;"><b>resize</b> [<i>deltax
+deltay</i>] (<b>C&minus;t r</b>)</p>
+
+<p style="margin-left:22%;">If <i>deltax</i> and
+<i>deltay</i> are supplied, resize the current frame by that
+(i.e. move the bottom right corner by the given offsets and
+then move this frame and resize adjacent frames to make the
+frames fill the whole screen again.)</p>
+
+<p style="margin-left:22%; margin-top: 1em">If in
+interactive mode no arguments are supplied, resize the
+current frame interactively:</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="20%">
+
+
+<p valign="top"><b>Return</b>:</p></td>
+<td width="58%">
+
+
+<p valign="top">finish resizing</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="20%">
+
+
+<p valign="top"><b>C&minus;g</b> or <b>Escape</b>:</p></td>
+<td width="58%">
+
+
+<p valign="top">abort resizing</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="20%">
+
+
+<p valign="top"><b>C&minus;n</b> or <b>Down</b> or
+<b>j</b>:</p> </td>
+<td width="58%">
+
+
+<p valign="top">grow vertically</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="20%">
+
+
+<p valign="top"><b>C&minus;p</b> or <b>Up</b> or
+<b>k</b>:</p> </td>
+<td width="58%">
+
+
+<p valign="top">shrink vertically</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="20%">
+
+
+<p valign="top"><b>C&minus;f</b> or <b>Right</b> or
+<b>l</b>:</p> </td>
+<td width="58%">
+
+
+<p valign="top">grow horizontally</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="20%">
+
+
+<p valign="top"><b>C&minus;b</b> or <b>Up</b> or
+<b>h</b>:</p> </td>
+<td width="58%">
+
+
+<p valign="top">shrink horizontally</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="20%">
+
+
+<p valign="top"><b>s</b>:</p></td>
+<td width="58%">
+
+
+<p valign="top">shrink to size of current window</p></td>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">While resizing
+interactively, changes are in multiples of the amount of
+pixels given by <b>set resizeunit</b> (by default 10).</p>
+
+<p style="margin-left:11%;"><b>restart</b></p>
+
+<p style="margin-left:22%;">Restart ratpoison.</p>
+
+<p style="margin-left:11%;"><b>rudeness</b>
+[<i>rudeness</i>]</p>
+
+<p style="margin-left:22%;">Show or set what kind of
+windows are allowed to jostle into the foreground.</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><i>rudeness</i>
+is a bitwise or of the following values:</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">1</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">Transient windows may raise.</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">2</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">Normal windows may raise.</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">4</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">New transient windows end up in the
+foreground.</p> </td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">8</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-4%"></td>
+<td width="82%">
+
+
+<p valign="top">New normal windows end up in the
+foreground.</p> </td>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">Default is all
+allowed i.e. 15.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em" valign="top"><b>sdump</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Output the list of
+all screens. The screens are separated by commas. Each
+screen is shown as 6 values: its number, its
+x&minus;coordinate, its y&minus;coordinate, its width, its
+height and if it is currently selected (1=true,0=false).</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>select
+&minus;</b>|<i>name</i>|<i>nr</i> (<b>C&minus;t
+&rsquo;</b>)</p>
+
+<p style="margin-left:22%;">If a number is given, switch to
+the window with number <i>nr</i>. If a name is given, switch
+to the window in the current group with name <i>name</i>.
+Blank the current frame, if <b>&minus;</b> is given.</p>
+
+<p style="margin-left:11%;"><b>set</b> [<i>variable</i>
+[<i>value</i>]]</p>
+
+<p style="margin-left:22%;">If no argument is given, output
+all ratpoison variables and their values. <br>
+If one argument is given, output the value of ratpoison
+variable <i>variable</i>. <br>
+Otherwise set ratpoison variable <i>variable</i> to
+<i>value</i>. What values are valid depends on the variable.
+See the section <b>VARIABLES</b> later in this document for
+details.</p>
+
+<p style="margin-left:11%;"><b>setenv</b> <i>variable
+value</i></p>
+
+<p style="margin-left:22%;">Set the environment variable
+<i>variable</i> to <i>value</i>. (Environment variables will
+be passed to all programs started from ratpoison.)</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>sfdump</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Output all frames
+similar to <b>fdump</b>, but not limited to one screen, but
+all screens at once and with the screen number after each
+frame.</p> </td>
+</table>
+
+<p style="margin-left:11%;"><b>sfrestore</b></p>
+
+<p style="margin-left:22%;">Replace the current frames with
+the ones specified in <i>frames</i> in the format as
+generated by <b>sfdump</b>.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>shrink</b></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Shrink the current
+frame to the size of the current window with in.</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>split</b> [<i>split</i>]
+(<b>C&minus;t s</b>)</p>
+
+<p style="margin-left:22%;">alias for <b>vsplit</b></p>
+
+<p style="margin-left:11%;"><b>source</b> <i>file</i></p>
+
+<p style="margin-left:22%;">Read <i>file</i> and execute
+each line as ratpoison command.</p>
+
+<p style="margin-left:11%;"><b>sselect</b>
+<i>screennumber</i></p>
+
+<p style="margin-left:22%;">Switch to the screen
+<i>screennumber</i>. (If you have multiple physical
+ones.)</p>
+
+<p style="margin-left:11%;"><b>startup_message
+on</b>|<b>off</b></p>
+
+<p style="margin-left:22%;">Select whether ratpoison will
+show a startup message or not.</p>
+
+<p style="margin-left:11%;"><b>swap</b> [<i>dest-frame</i>
+[<i>src-frame</i>]] (<b>C&minus;t x</b>)</p>
+
+<p style="margin-left:22%;">Exchange the window in
+<i>src-frame</i> (or the current frame if there is no second
+argument) with the window <i>dest-frame</i> (or ask
+interactively which frame to swap with if there is no
+argument).</p>
+
+<p style="margin-left:11%;"><b>time</b> (<b>C&minus;t
+a</b>)</p>
+
+<p style="margin-left:22%;">Output current data and
+time.</p>
+
+<p style="margin-left:11%;"><b>title</b> <i>newname</i>
+(<b>C&minus;t A</b>)</p>
+
+<p style="margin-left:22%;">Overwrite the title of the
+current window with <i>newname</i>. All following ratpoison
+commands will only know the window under the new name.</p>
+
+<p style="margin-left:11%;"><b>tmpwm</b> <i>tmpwm</i></p>
+
+<p style="margin-left:22%;">Temporarily give control over
+to the other window manager <i>tmpwm</i>, reclaiming control
+when that WM terminates.</p>
+
+<p style="margin-left:11%;"><b>unalias</b> <i>alias</i></p>
+
+<p style="margin-left:22%;">Remove the alias
+<i>alias</i>.</p>
+
+<p style="margin-left:11%;"><b>unbind</b> <i>key</i></p>
+
+<p style="margin-left:22%;">alias for &quot;<b>undefinekey
+root</b> <i>key</i>&quot;</p>
+
+<p style="margin-left:11%;"><b>undefinekey</b> <i>keymap
+key</i></p>
+
+<p style="margin-left:22%;">Remove the binding for
+<i>key</i> from <i>keymap</i>.</p>
+
+<p style="margin-left:11%;"><b>undo</b> (<b>C&minus;t _ or
+C&minus;t u</b>)</p>
+
+<p style="margin-left:22%;">Un&minus;do the last change to
+the frameset. (Like splitting, resizing, deleting, ...) <br>
+The amount of steps that can be undone is specified by the
+variable <b>maxundos</b>.</p>
+
+<p style="margin-left:11%;"><b>unmanage</b>
+[<i>name</i>]</p>
+
+<p style="margin-left:22%;">Add <i>name</i> to the list of
+unmanaged windows. Thus, windows of this name will not be
+managed but allowed to choose their position themselves.</p>
+
+<p style="margin-left:22%; margin-top: 1em">In
+non&minus;interactive mode calling it without arguments will
+print the list.</p>
+
+<p style="margin-left:22%; margin-top: 1em">The list can be
+cleared again by calling <b>clrunmanaged</b>.</p>
+
+<p style="margin-left:11%;"><b>unsetenv</b>
+<i>variable</i></p>
+
+<p style="margin-left:22%;">Remove variable <i>variable</i>
+from the list of environment variables.</p>
+
+<p style="margin-left:11%;"><b>verbexec</b>
+<i>cmdline</i></p>
+
+<p style="margin-left:22%;">Spawn a shell executing
+<i>cmdline</i> after showing a message with the command.</p>
+
+<p style="margin-left:11%;"><b>version</b> (<b>C&minus;t
+v</b>)</p>
+
+<p style="margin-left:22%;">Output version and compile time
+information.</p>
+
+<p style="margin-left:11%;"><b>vsplit</b>
+[<i>l</i><b>/</b><i>p</i>|<i>pixels from
+top</i>|<b>&minus;</b><i>pixels from bottom</i>]
+(<b>C&minus;t s</b>)</p>
+
+<p style="margin-left:22%;">Split the current frame into
+upper frame and a lower frame. If no parameter is given,
+split in halves. If two numbers separated by a
+slash&nbsp;(&quot;<b>/</b>&quot;) are given, the upper one
+is <i>l</i> times the <i>p</i>th part and the lower one
+(<i>p</i>&minus;<i>l</i>) times the <i>p</i>th part of the
+prior height. Otherwise the lower one is <i>pixels from
+bottom</i> wide or the upper one <i>pixels from top</i>
+high, depending whether there is a <b>&minus;</b> in front
+of the number or not.</p>
+
+<p style="margin-left:11%;"><b>warp</b>
+[<b>on</b>|<b>off</b>]</p>
+
+<p style="margin-left:22%;">Select if focusing a window
+moves the rat cursor to the place it had been last time this
+window was focused, or not.</p>
+
+<p style="margin-left:11%;"><b>windows</b> [<i>format</i>]
+(<b>C&minus;t w</b>)</p>
+
+<p style="margin-left:22%;">In interactive mode, show the
+list of all windows in the current group for the duration
+specified by <b>msgwait</b> If <b>msgwait</b> is zero,
+toggle between indefinitely showing and not showing.</p>
+
+<p style="margin-left:22%; margin-top: 1em">The messages
+are shown in columns or rows depending on the <b>set</b>ting
+of <b>winliststyle</b> in the format set by <b>set
+winfmt</b>. The following substitutions happen in format:
+<br>
+%a by the application name (resource name), <br>
+%c by the resource class, <br>
+%f by the frame number, <br>
+%g by the gravity of the window, <br>
+%h by the height of the window, <br>
+%H by the unit to resize the window vertically (height_inc)
+<br>
+%i by the X Window ID, <br>
+%l by the last access number, <br>
+%n by the window number, <br>
+%s by window status (<b>*</b> is active window, <b>+</b>
+would be chosen by <b>other</b>, <b>&minus;</b> otherwise)
+<br>
+%S by the screen number <br>
+%t by the window name (see <b>set winname</b>), <br>
+%T by the string <b>Transient</b>, if it is a transient
+window <br>
+%w by the width of the window <br>
+%W by the unit to resize the window horizontally (width_inc)
+<br>
+and <br>
+%% by a single %</p>
+
+<p style="margin-left:22%; margin-top: 1em">Additionally
+there can be a positive decimal integer number between the
+percent sign and the format string to specify the length
+this value should be truncated to if longer. (For example:
+<b>%20t</b>)</p>
+
+<p style="margin-left:22%; margin-top: 1em">In
+non&minus;interactive mode, output the list of windows in
+the current group line by line. The format string can be
+overwritten by the optional parameter <i>format</i>.</p>
+
+<a name="VARIABLES"></a>
+<h2>VARIABLES</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Ratpoison
+variables can be shown and set with <b>set</b>. There are:
+<b><br>
+resizeunit</b> <i>pixels</i></p>
+
+<p style="margin-left:22%;">Set the amount of pixels
+interactive <b>resize</b>ing will add/subtract in each step.
+<br>
+Default is 5.</p>
+
+<p style="margin-left:11%;"><b>maxundos</b>
+<i>number</i></p>
+
+<p style="margin-left:22%;">The maximal amount of step
+ratpoison can undo with the <b>undo</b> command. <br>
+Default is 20.</p>
+
+<p style="margin-left:11%;"><b>wingravity
+nw</b>|<b>w</b>|<b>sw</b>|<b>n</b>|<b>c</b>|<b>s</b>|<b>ne</b>|<b>e</b>|<b>se</b></p>
+
+<p style="margin-left:22%;">Set the default gravity new
+normal windows will get. Possible values are the same as in
+the <b>gravity</b> command, which changes the gravity of an
+existing window: cardinal points or numbers 1 to 9. <br>
+Default is <b>northwest</b>.</p>
+
+<p style="margin-left:11%;"><b>maxsizegravity
+nw</b>|<b>w</b>|<b>sw</b>|<b>n</b>|<b>c</b>|<b>s</b>|<b>ne</b>|<b>e</b>|<b>se</b></p>
+
+<p style="margin-left:22%;">Set the default gravity new
+self&minus;maximised windows will get. Possible values are
+the same as in the <b>gravity</b> command, which changes the
+gravity of an existing window: cardinal points or numbers 1
+to 9. <br>
+Default is <b>center</b>.</p>
+
+<p style="margin-left:11%;"><b>transgravity
+nw</b>|<b>w</b>|<b>sw</b>|<b>n</b>|<b>c</b>|<b>s</b>|<b>ne</b>|<b>e</b>|<b>se</b></p>
+
+<p style="margin-left:22%;">Set the default gravity new
+transient windows will get. Possible values are the same as
+in the <b>gravity</b> command, which changes the gravity of
+an existing window: cardinal points or numbers 1 to 9. <br>
+Default is <b>center</b>.</p>
+
+<p style="margin-left:11%;"><b>bargravity
+nw</b>|<b>w</b>|<b>sw</b>|<b>n</b>|<b>c</b>|<b>s</b>|<b>ne</b>|<b>e</b>|<b>se</b></p>
+
+<p style="margin-left:22%;">Select the location where
+message and prompt bars appear. <br>
+Default is <b>northeast</b>.</p>
+
+<p style="margin-left:11%;"><b>font</b> <i>font</i></p>
+
+<p style="margin-left:22%;">Make ratpoison use font
+<i>font</i>.</p>
+
+<p style="margin-left:11%;"><b>padding</b> <i>left top
+right bottom</i></p>
+
+<p style="margin-left:22%;">Set how much space at the
+borders of the screen will not be used. <br>
+Default is 0 0 0 0.</p>
+
+<p style="margin-left:11%;"><b>border</b> <i>pixels</i></p>
+
+<p style="margin-left:22%;">Selects how thick the frame
+around windows is. <br>
+Default is 1.</p>
+
+<p style="margin-left:11%;"><b>barborder</b>
+<i>pixels</i></p>
+
+<p style="margin-left:22%;">Selects how thick the frame
+around ratpoison&rsquo;s prompt or message windows is. <br>
+Default is 1.</p>
+
+<p style="margin-left:11%;"><b>inputwidth</b>
+<i>pixels</i></p>
+
+<p style="margin-left:22%;">Determine the width of the
+input window. <br>
+Default is 200.</p>
+
+<p style="margin-left:11%;"><b>barinpadding
+0</b>|<b>1</b></p>
+
+<p style="margin-left:22%;">If there is padding, determines
+whether the bar appears at the edge of the screen (<b>1</b>)
+or at the edge of the window area (<b>0</b>). <br>
+Default is 0.</p>
+
+<p style="margin-left:11%;"><b>topkmap</b> <i>kmap</i></p>
+
+<p style="margin-left:22%;">Make <i>kmap</i> the top keymap
+ratpoison graps directly. The default value is
+<b>top</b>.</p>
+
+<p style="margin-left:11%;"><b>waitcursor
+0</b>|<b>1</b></p>
+
+<p style="margin-left:22%;">Determine whether to change the
+rat cursor when waiting for a key (<b>1</b>) or not
+(<b>0</b>). (see <b>readkey</b> and <b>describekey</b>).
+<br>
+Default is 1.</p>
+
+<p style="margin-left:11%;"><b>winfmt</b> <i>format</i></p>
+
+<p style="margin-left:22%;">Choose the default format for
+the the <b>windows</b> command. <br>
+Default is %n%s%t.</p>
+
+<p style="margin-left:11%;"><b>winname
+title</b>|<b>name</b>|<b>class</b></p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-14%"></td>
+<td width="92%">
+
+
+<p valign="top">Choose what is considered the
+&quot;name&quot; of the window by ratpoison:</p></td>
+</table>
+
+<p style="margin-left:22%;"><b>title</b> The title of the
+window.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-11%"></td>
+<td width="89%">
+
+
+<p valign="top"><b>name</b></p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-11%"></td>
+<td width="89%">
+
+
+<p valign="top">The resource name of the window.</p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-11%"></td>
+<td width="89%">
+
+
+<p valign="top"><b>class</b></p></td>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="-11%"></td>
+<td width="89%">
+
+
+<p valign="top">The resource class i.e. the name of the
+application.</p> </td>
+</table>
+
+<p style="margin-left:22%;">Default is <b>title</b>.</p>
+
+<p style="margin-left:11%;"><b>fgcolor</b> <i>color</i></p>
+
+<p style="margin-left:22%;">The foreground color of the
+windows ratpoison creates. <br>
+Default is black.</p>
+
+<p style="margin-left:11%;"><b>bgcolor</b> <i>color</i></p>
+
+<p style="margin-left:22%;">The background color of the
+windows ratpoison creates. <br>
+Default is white.</p>
+
+<p style="margin-left:11%;"><b>barpadding</b> <i>x
+y</i></p>
+
+<p style="margin-left:22%;">Set horizontal padding of
+ratpoison windows to <i>x</i> and vertical padding to
+<i>y</i>. <br>
+Default is 4 0</p>
+
+<p style="margin-left:11%;"><b>winliststyle
+row</b>|<b>column</b></p>
+
+<p style="margin-left:22%;">Determines whether windows are
+shown in <b>row</b>s or in <b>column</b>s. <br>
+Default is column.</p>
+
+<p style="margin-left:11%;"><b>framesels</b>
+<i>selectors</i></p>
+
+<p style="margin-left:22%;">Override the frame selectors
+<b>fselect</b> uses. The first character is the selector for
+the first frame, the second character is the selector for
+the second frame and so on.</p>
+
+<p style="margin-left:22%; margin-top: 1em">Using this
+variable, one can directly access more than 10 frames.</p>
+
+<p style="margin-left:22%; margin-top: 1em">Default is an
+empty string, which is equivalent to
+&quot;0123456789&quot;.</p>
+
+<a name="AUTHOR"></a>
+<h2>AUTHOR</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Upstream Author
+is Shawn Betts &lt;sabetts@vcn.bc.ca&gt;. <br>
+See /usr/share/doc/ratpoison/AUTHORS for other
+contributors.</p>
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page was written by Bernhard R. Link
+&lt;brlink@debian.org&gt;.</p>
+<hr>
+</div>
+</body>
+</html>

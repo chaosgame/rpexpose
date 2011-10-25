@@ -1,0 +1,83 @@
+<html>
+<link rel="stylesheet" type="text/css" href="/css/rpexpose.css">
+<head>
+</head>
+<body>
+
+<div class="block header">
+<h1>Ratpoison Scripts and Utilities</h1>
+</div>
+
+<div class="block">
+
+<h2>RpExpose</h2>
+
+<b>RpExpose</b> is a graphical pager written for the Ratpoison window manager, but designed to be used with any window manager.
+<p>
+<center><img border=1px src="/images/interpolate.png"/></center>
+
+<h2>Links</h2>
+<ul>
+<li><a href="rpexpose.1.html">RpExpose Man Page</a></li>
+<li><a href="ratpoison.1.html">Ratpoison Man Page</a></li>
+<li><a href="http://www.github.com/chaosgame/rpexpose">RpExpose Project Page</a></li>
+<li><a href="http://ratpoison.antidesktop.net/">Ratpoison Wiki</a></li>
+<li><a href="http://www.nongnu.org/ratpoison/">Ratpoison Project Page</a></li>
+
+</div>
+
+<div class="block">
+<h2>RpRestart</h2>
+
+<b>RpRestart</b> is a simple session manager.
+Along with the following two lines in your .ratpoisonrc, it dumps and restores the frames across restarts.  The trick here is that <code>newwm ratpoison</code> does the same thing as the default <code>restart</code>, so we can alias <code>restart</code> to run a script, and then call <code>newwm ratpoison</code> from within the script.
+<p>
+<b>~/.ratpoisonrc</b>
+<div class="code-block"><code>
+addhook quit exec echo "" > ~/.ratpoison_frames <br>
+exec ratpoison -c "frestore `cat ~/.ratpoison_frames`" <br>
+alias restart exec rprestart
+</code></div>
+<p>
+<b>RpRestart</b>
+<div class="code-block"><code>
+#!/bin/bash <br>
+ratpoison -c "fdump" > ~/.ratpoison_frames <br>
+ratpoison -c "newwm ratpoison"
+</code></div>
+
+</div>
+
+<div class="block">
+<h2>RpVimmode</h2>
+
+<b>RpVimmode</b> toggles h,j,k,l between being h,j,k,l and up,right,left,down.
+<p>
+<b>RpVimmode</b>
+<div class="code-block"><code>
+#!/bin/sh <br>
+if [ -e ~/.rpvimmode ]; then <br>
+echo " <br>
+keycode	43 = h H <br>
+keycode	44 = j J <br>
+keycode	45 = k K <br>
+keycode	46 = l L" | <br>
+xmodmap -; <br>
+ratpoison -c "echo Vim Mode Off" <br>
+rm ~/.rpvimmode; <br>
+else <br>
+echo " <br>
+keycode	43 = Left H <br>
+keycode	44 = Down J <br>
+keycode	45 = Up K <br>
+keycode	46 = Right L" | <br>
+xmodmap -; <br>
+ratpoison -c "echo Vim Mode On" <br>
+touch ~/.rpvimmode; <br>
+fi
+</code></div>
+
+</div>
+
+</body>
+</html>

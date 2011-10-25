@@ -1,0 +1,244 @@
+<!-- Creator     : groff version 1.19.2 -->
+<!-- CreationDate: Thu Feb 14 20:33:13 2008 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<link rel="stylesheet" type="text/css" href="/css/rpexpose.css">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p     { margin-top: 0; margin-bottom: 0; }
+       pre   { margin-top: 0; margin-bottom: 0; }
+       table { margin-top: 0; margin-bottom: 0; }
+</style>
+<title>RPEXPOSE</title>
+
+</head>
+<body>
+
+<div class="block">
+<h1 align=center>RPEXPOSE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#FILES">FILES</a><br>
+<a href="#RPEXPOSERC FILE">RPEXPOSERC FILE</a><br>
+<a href="#RPEXPOSE OPTIONS">RPEXPOSE OPTIONS</a><br>
+
+<hr>
+
+
+<a name="NAME"></a>
+<h2>NAME</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">RpExpose
+&minus; The Ratpoison Graphical Pager</p>
+
+<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rpexpose
+&minus;&minus;help</b> | <b>&minus;&minus;version <br>
+rpexpose &minus;&minus;generate [</b><i>file</i><b>] <br>
+rpespose &minus;&minus;select [</b><i>file</i><b>] <br>
+rpexpose &minus;&minus;clean</b></p>
+
+<a name="EXAMPLES"></a>
+<h2>EXAMPLES</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">From <b>rpthumb
+<br>
+ratpoison</b> &minus;c &ldquo;fdump&rdquo; | <b><br>
+tr</b> &ldquo;,:&rdquo; &ldquo;\n\n&rdquo; | <b><br>
+sed</b> &ldquo;s/[()]//g&rdquo; | <b><br>
+awk</b> &acute;/window/ {print $2}&acute; | <b><br>
+rpexpose</b> &minus;&minus;generate &minus;</p>
+
+<p style="margin-left:11%; margin-top: 1em">From
+<b>rpselect <br>
+ratpoison</b> &minus;c &quot;windows %s:%i:%n:%t&quot; |
+<b><br>
+sed</b> &minus;e &ldquo;s/^*:/1:/&rdquo; &minus;e
+&ldquo;s/^[+&minus;]:/0:/&rdquo; | <b><br>
+rpexpose</b> &minus;&minus;select &minus;</p>
+
+<p style="margin-left:11%; margin-top: 1em">Add the
+following lines to your <b>.ratpoionrc</b> file <b><br>
+addhook</b> switchwin exec <b>rpthumb <br>
+addhook</b> quit exec <b>rpexpose</b> --clean <b><br>
+bind [</b><i>key</i><b>]</b> exec <b>rpselect</b></p>
+
+<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">RpExpose is a
+graphical pager written for the Ratpoison window manager,
+but designed to be used with any window manager.</p>
+
+<a name="OPTIONS"></a>
+<h2>OPTIONS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;h
+&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">Show summary of options</p>
+
+<p style="margin-left:11%;"><b>&minus;v
+&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">Show the version of program</p>
+
+<p style="margin-left:11%;"><b>&minus;g
+&minus;&minus;generate</b> <i>file</i></p>
+
+<p style="margin-left:22%;">Generates a thumbnail image of
+the top level windows listed in <i>file</i>. <i>file</i>
+should list the x window id&acute;s of all of the top level
+windows. If <i>file</i> is &minus;, then rpexpose will read
+from stdin. Assuming that you are using Ratpoison,
+<b>rpthumb</b> (provided with <b>rpexpose</b>) is a
+prewritten wrapper around <b>&minus;&minus;generate</b>, and
+you should simply call that instead.</p>
+
+<p style="margin-left:11%;"><b>&minus;s
+&minus;&minus;select</b> <i>file</i></p>
+
+<p style="margin-left:22%;">Creates a dialog box with
+thumbnails of all of the open windows and allows you to
+select one to raise. <i>file</i> contains a list of the
+current windows the syntax of which is shown below in
+<b>FILES</b>. Assuming that you are using Ratpoison,
+<b>rpselect</b> (provided with <b>rpexpose</b>) is a
+prewritten wrapper around <b>&minus;&minus;select</b>, and
+you should simply call that instead.</p>
+
+<p style="margin-left:11%;"><b>&minus;c
+&minus;&minus;clean</b></p>
+
+<p style="margin-left:22%;">Cleans all of the image files
+in the <i>~/.rpexpose/</i> directory. This function should
+be called when your window manager exits to ensure that the
+<i>~/.rpexpose/</i> directory does not fill up with garbage
+data.</p>
+
+<a name="FILES"></a>
+<h2>FILES</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;s
+&minus;&minus;select</b> <i>file</i></p>
+
+<p style="margin-left:22%;">Each line of <i>file</i> must
+follow the following format:
+<b>[</b><i>1_if_selected,_0_otherwise</i><b>]:[</b><i>X_Window_ID</i><b>]:
+[</b><i>Internal_ID</i><b>]:[</b><i>Window_Name</i><b>]</b></p>
+
+<p style="margin-left:11%;"><b>~/.rpexposerc</b></p>
+
+<p style="margin-left:22%;">A sample rpexposerc is included
+along side rpexpose for your convenience. The rpexposerc
+file is configured in a similar manner to Ratpoison&rsquo;s
+rc file. The commands are described in the following
+section.</p>
+
+<a name="RPEXPOSERC FILE"></a>
+<h2>RPEXPOSERC FILE</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>left (h j) |
+right (l k)</b></p>
+
+<p style="margin-left:22%;">Select the left or right
+thumbnail</p>
+
+<p style="margin-left:11%;"><b>quit (q)</b></p>
+
+<p style="margin-left:22%;">Quits <b>rpexpose</b></p>
+
+<p style="margin-left:11%;"><b>select (Space
+Return)</b></p>
+
+<p style="margin-left:22%;">Raises the current window and
+exits <b>rpexpose</b></p>
+
+<p style="margin-left:11%;"><b>bind [</b><i>key</i><b>]
+[</b><i>command</i><b>]</b></p>
+
+<p style="margin-left:22%;">Binds the <i>key</i> to the
+given <i>command</i>. Execute command every time <i>key</i>
+is pressed</p>
+
+<p style="margin-left:11%;"><b>unbind
+[</b><i>key</i><b>]</b></p>
+
+<p style="margin-left:22%;">Unbind the <i>key</i>. Remove
+the action associated with <i>key</i></p>
+
+<p style="margin-left:11%;"><b>exec
+[</b><i>command</i><b>]</b></p>
+
+<p style="margin-left:22%;">Execute the supplied
+<i>command</i></p>
+
+<p style="margin-left:11%;"><b>set [</b><i>option</i><b>]
+[</b><i>value</i><b>]</b></p>
+
+<p style="margin-left:22%;">Set the internal <i>option</i>
+to the supplied <i>value</i>. A list of options is supplied
+in the following section</p>
+
+<a name="RPEXPOSE OPTIONS"></a>
+<h2>RPEXPOSE OPTIONS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>widescreen
+[</b><i>boolean</i><b>]</b></p>
+
+<p style="margin-left:22%;"><b>rpexpose</b> attempts to
+make the selection window fit the shape of the screen as
+closely as possible. If you have a wide-screen monitor, set
+this to be true</p>
+
+<p style="margin-left:11%;"><b>thumb_padding
+[</b><i>integer</i><b>]</b></p>
+
+<p style="margin-left:22%;"><b>thumb_padding</b> is the
+space between each thumbnail, as well as the thumbnail and
+the edge of the window.</p>
+
+<p style="margin-left:11%;"><b>text_padding
+[</b><i>integer</i><b>]</b></p>
+
+<p style="margin-left:22%;"><b>text_padding is the
+whitespace padding around each of the numbers in the top
+left hand corner of the thumbnails.</b></p>
+
+<p style="margin-left:11%;"><b>border_padding
+[</b><i>integer</i><b>]</b></p>
+
+<p style="margin-left:22%;"><b>border_padding</b> is the
+width of the border around the thumbnail of the selected
+window.</p>
+
+<p style="margin-left:11%;"><b>select_exec
+[</b><i>string</i><b>]</b></p>
+
+<p style="margin-left:22%;"><b>select_exec</b> is set to
+the string to be executed in order to raise a window. The
+values <i>%x</i>, <i>%n</i>, and <i>%i</i> are replaced with
+the <i>X_Window_ID</i>, <i>Window_Name</i>, and
+<i>Window_ID</i> respectively.</p>
+<hr>
+</div>
+</body>
+</html>
